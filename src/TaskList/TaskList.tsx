@@ -4,7 +4,7 @@ import {TodoListTaskType} from '../App/App'
 
 type TaskListPropsType = {
     tasks: Array<TodoListTaskType>,
-    onDeletetask_1: Function,
+    removeTask: (id: string) => void,
     toogleTask: Function
 }
 
@@ -19,7 +19,7 @@ const TaskList = (props: TaskListPropsType) => {
                                    checked={item.isDone} 
                                    onChange={() => {props.toogleTask(item.id)}} /> 
                             <span>{item.title}</span>
-                            <button onClick={() => {props.onDeletetask_1(item.id)}}>Delete</button>
+                            <button onClick={() => {props.removeTask(item.id)}}>✖️</button>
                         </li>
                     )
                 })

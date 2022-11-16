@@ -3,32 +3,36 @@ import React, { useState } from 'react';
 import TaskList from '../TaskList/TaskList';
 import Button from '../Button/Button'
 import Title from '../Title/Title';
-import { TodoListTaskType } from '../App/App';
+import { TodoListTaskType, TodoListFilterType } from '../App/App';
 
-import './todoList.css'
+import './todoList.css'  
+import { v1 } from 'uuid';
 
 type TodoListPropsType = {
     tasks: Array<TodoListTaskType>,
-    onDeletetask_1: Function,
-    addNewTask: (text: string, newId: number) => void, 
-    changeFilter: (newFilter: string) => void,
+    removeTask: (id: string) => void,
+    addNewTask: (text: string) => void, 
+    changeFilter: (newFilter: TodoListFilterType) => void,
     toogleTask: Function,
     title: string
 }
 
 const TodoList = (props: TodoListPropsType) => {
 
-    const [value, setValue] = useState('')
-    const [show, setShow] = useState(true)
+    const [value, setValue] = useState<string>('')
+    const [newId, setNewId] = useState<number>(4)
+    const [show, setShow] = useState<boolean>(true)
 
     const addNewTask = () => {
-        props.addNewTask(value, 4)
-        setValue('')
+        props.addNewTask(value)
+        return setValue('')
     }
 
     const changeShow = () => {
-        setShow(show => !show)
+        return setShow(show => !show)
     }
+
+    const buttonData: Array<TodoListFilterType> = ['All', 'Active', 'Completed']
 
     return (
         <div >
@@ -41,12 +45,13 @@ const TodoList = (props: TodoListPropsType) => {
                             <input onChange={(e) => {setValue(e.currentTarget.value)}} value={value}/>
                             <button onClick={addNewTask} >Добавить task</button>
                         </div> 
-                            <TaskList tasks={props.tasks} onDeletetask_1={props.onDeletetask_1} toogleTask={props.toogleTask}/>
+                            <TaskList tasks={props.tasks} removeTask={props.removeTask} toogleTask={props.toogleTask}/>
                         <div>
-                            {['All', 'Active', 'Completed'].map((item: string, i: number) => {
-                                return <Button key={i} 
-                                               name={item} 
-                                               changeFilter={props.changeFilter}/>
+                            {
+                                buttonData.map((item: TodoListFilterType, i: number) => {
+                                    return <Button key={i} 
+                                                name={item} 
+                                                changeFilter={props.changeFilter}/>
                             })}
                         </div>
                     </>
