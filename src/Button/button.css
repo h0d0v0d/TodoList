@@ -1,3 +1,16 @@
 .filter-button{
-    width: 100px;
+    width: 75px;
+    margin-right: 5px;
+    border: none;
+    border: solid 1px black
+}
+
+.normal{
+    background-color: white;
+    color: black
+}
+
+.active{
+    background-color: rgb(157, 54, 191);
+    color: white
 }

@@ -4,22 +4,23 @@ import {TodoListTaskType} from '../App/App'
 
 type TaskListPropsType = {
     tasks: Array<TodoListTaskType>,
-    removeTask: (id: string) => void,
-    toogleTask: Function
+    onRemoveTask: (id: string) => void,
+    onToogleTask: Function
 }
 
-const TaskList = (props: TaskListPropsType) => {
+const TaskList: React.FC<TaskListPropsType> = (props) => {
     return (
         <ul>
             {
-                props.tasks.map((item: TodoListTaskType) => {
+                props.tasks.map((task: TodoListTaskType) => {
+                    const {id, isDone, title} = task
                     return (
-                        <li key={item.id}>
+                        <li key={id} style={isDone ? {opacity: '0.5'} : {opacity: '1'}} >
                             <input type="checkbox" 
-                                   checked={item.isDone} 
-                                   onChange={() => {props.toogleTask(item.id)}} /> 
-                            <span>{item.title}</span>
-                            <button onClick={() => {props.removeTask(item.id)}}>✖️</button>
+                                   checked={isDone} 
+                                   onChange={() => {props.onToogleTask(id)}} /> 
+                            <span>{title}</span>
+                            <button onClick={() => {props.onRemoveTask(id)}}>Delete</button>
                         </li>
                     )
                 })

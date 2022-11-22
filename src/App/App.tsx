@@ -1,12 +1,12 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect} from 'react';
 import { v1 } from 'uuid';
 
-import './App.css';
 import TodoList from '../TodoList/TodoList';
 
-export type TodoListFilterType = 'All' | 'Active' | 'Completed'
+import './App.css';
 
+export type TodoListFilterType = 'All' | 'Active' | 'Completed'
 export type TodoListTaskType = {
     id: string,
     title: string,
@@ -30,7 +30,6 @@ let tasks: Array<TodoListTaskType> = [
         isDone: false
     },
 ]
-const todoListTitle_1 = 'What to learn'
 
 function App() {
 
@@ -38,43 +37,43 @@ function App() {
     const [filter, setFilter] = useState<TodoListFilterType>('All')
     const [filterTasks, setFilterTasks] = useState<Array<TodoListTaskType>>(tasks_1)
 
-    const addNewTask = (text: string) => {
-        return setTasks_1([...tasks_1, {id: v1(), title: text, isDone: false}])
+    const onAddNewTask = (title: string) => {
+        return setTasks_1([{id: v1(), title, isDone: false}, ...tasks_1])
     }
 
-    const removeTask = (id: string) => {
-        return setTasks_1(tasks_1.filter(item => item.id !== id))
+    const onRemoveTask = (id: string) => {
+        return setTasks_1(tasks_1.filter(t => t.id !== id))
     }
 
-    const toogleTask = (id: string) => {
-        return setTasks_1(tasks_1.map(i => i.id === id ? {...i, isDone: !i.isDone} : i))
+    const onToogleTask = (id: string) => {
+        return setTasks_1(tasks_1.map(t => t.id === id ? {...t, isDone: !t.isDone} : t))
     }
 
-    const changeFilter = (newFilter: TodoListFilterType) => {
+    const onChangeFilter = (newFilter: TodoListFilterType) => {
         return setFilter(newFilter) 
     }
 
-    const onFilterTasks = () => {
+    const filteredTasks = () => {
         switch(filter) {
-            case 'Completed': return setFilterTasks(tasks_1.filter(item => item.isDone))
-            case 'Active': return setFilterTasks(tasks_1.filter(item => !item.isDone))
+            case 'Completed': return setFilterTasks(tasks_1.filter(t => t.isDone))
+            case 'Active': return setFilterTasks(tasks_1.filter(t => !t.isDone))
             default: return setFilterTasks(tasks_1)
         }
     }
 
     useEffect(() => {
-        onFilterTasks()
+        filteredTasks()
     }, [filter, tasks_1])
 
     return (
         <div className="App">
-                <TodoList title={todoListTitle_1}
+                <TodoList title={'What to learn'}
                           tasks={filterTasks}
-                          toogleTask={toogleTask}
-                          removeTask={removeTask}
-                          addNewTask={addNewTask}
-                          changeFilter={changeFilter}
-                />
+                          onToogleTask={onToogleTask}
+                          onRemoveTask={onRemoveTask}
+                          onAddNewTask={onAddNewTask}
+                          onChangeFilter={onChangeFilter}
+                          filter={filter}/>
         </div>
     );
 }
