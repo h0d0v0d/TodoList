@@ -9,13 +9,16 @@ import './todoList.css'
 import { v1 } from 'uuid';
 
 type TodoListPropsType = {
+    todiListId: string,
+    title: string,
     tasks: Array<TodoListTaskType>,
-    onRemoveTask: (id: string) => void,
-    onAddNewTask: (text: string) => void, 
-    onChangeFilter: (newFilter: TodoListFilterType) => void,
     filter: TodoListFilterType,
-    onToogleTask: (id: string) => void,
-    title: string
+    students: Array<string>
+    addNewTask: (text: string, todiListId: string) => void, 
+    removeTask: (id: string, todiListId: string) => void,
+    changeFilter: (newFilter: TodoListFilterType, todiListId: string) => void,
+    toogleTask: (id: string, todiListId: string, newStatus: boolean) => void,
+    removeTaskList: (id: string) => void
 }
 
 const TodoList: React.FC<TodoListPropsType> = (props) => {
@@ -24,18 +27,29 @@ const TodoList: React.FC<TodoListPropsType> = (props) => {
     const [show, setShow] = useState<boolean>(true)
     const [error, setError] = useState<boolean>(false)
 
-    const addNewTask = () => {
+    const onAddNewTask = () => {
         if (value.trim() !== '') {
-            props.onAddNewTask(value.trim())
+            props.addNewTask(value.trim(), props.todiListId)
             setError(false)
             return setValue('')
         }
         setError(true)
     }
 
+    const onRemoveTask = (id: string) => {
+        props.removeTask(id, props.todiListId)
+    }
+
+    const onToogleTask = (id: string, newStatus: boolean) => {
+        props.toogleTask(id, props.todiListId, newStatus)
+    }
+
+    const onChangeFilter = (newFilter: TodoListFilterType) => {
+        props.changeFilter(newFilter, props.todiListId)
+    }
+ 
     const onClickEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        setError(false)
-        return e.key === 'Enter' ? addNewTask() : null;
+        return e.key === 'Enter' ? onAddNewTask() : e.key !== ' ' ? setError(false) : null
     }
 
     const changeShow = () => {
@@ -45,7 +59,7 @@ const TodoList: React.FC<TodoListPropsType> = (props) => {
     const buttonData: Array<TodoListFilterType> = ['All', 'Active', 'Completed']
 
     return (
-        <div>
+        <div className='todo-list'>
             <Title title={props.title}/>
             {   
                 show && 
@@ -54,30 +68,42 @@ const TodoList: React.FC<TodoListPropsType> = (props) => {
                         <input onChange={(e) => {setValue(e.currentTarget.value)}} 
                                value={value}
                                onKeyDown={onClickEnter}
-                               className={error ? 'error-input' : ''}/>
-                        <button onClick={addNewTask}>Добавить task</button>
+                               className={`input ${error ? 'error-input' : 'normal-input'}`}/>
+                        <button onClick={onAddNewTask} className='add-task-button' >Добавить task</button>
                         {
-                            error && <div className='error-message'>Ошибка блять</div>
+                            error && <div className='error-message'>Валидация не пройдена идиот</div>
                         }
                     </div> 
-                    <TaskList tasks={props.tasks} 
-                              onRemoveTask={props.onRemoveTask} 
-                              onToogleTask={props.onToogleTask}/>
-                    <div>
+                        {
+                            props.tasks.length === 0 ? 
+                            <span>Список задач пуст...</span> :
+                            <TaskList tasks={props.tasks} 
+                                      onRemoveTask={onRemoveTask} 
+                                      onToogleTask={onToogleTask}/>
+                        }
+                    <div className='filter-button-wrapp'>
                         {
                             buttonData.map((item: TodoListFilterType) => {
                                 return (
                                     <Button key={v1()} 
                                             name={item} 
-                                            onChangeFilter={props.onChangeFilter}
+                                            onChangeFilter={onChangeFilter}
                                             filter={props.filter}/>
                                 )
                             })
                         }     
                     </div>
+                    {
+                        props.students.map((s, i) => {
+                            return <div key={i}>{s}</div>
+                        })
+                    }
                 </>
             }
-            <button onClick={changeShow} className='show-button'>{show ? 'Hide' : 'Show'}</button>
+            <div className='main-buttons-wrapper'>
+                <button onClick={changeShow} className='show-button'>{show ? 'Hide' : 'Show'}</button>
+                <button onClick={() => {props.removeTaskList(props.todiListId)}} className='remove-list-button'>Delete list</button>
+            </div>
         </div>
     );
 };

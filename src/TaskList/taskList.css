@@ -1,0 +1,22 @@
+.task-item {
+    margin-top: 3px;
+    display: flex;
+}
+
+.unactive-task{
+    opacity: 0.5;
+}
+
+.delete-task-button{
+    border: solid 1px red;
+    border-radius: 20px;
+    color: red;
+    background-color: white;
+    margin: 0 0 0 auto;
+}
+
+.delete-task-button:hover{
+    color: white;
+    background-color: red;
+    transition: 0.3s;
+}

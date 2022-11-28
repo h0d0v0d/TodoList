@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 
 import {TodoListTaskType} from '../App/App'
+
+import './taskList.css'
 
 type TaskListPropsType = {
     tasks: Array<TodoListTaskType>,
     onRemoveTask: (id: string) => void,
-    onToogleTask: Function
+    onToogleTask: (id: string, newStatus: boolean) => void
 }
 
 const TaskList: React.FC<TaskListPropsType> = (props) => {
@@ -14,13 +16,17 @@ const TaskList: React.FC<TaskListPropsType> = (props) => {
             {
                 props.tasks.map((task: TodoListTaskType) => {
                     const {id, isDone, title} = task
+                    const onRemoveTask = () => { props.onRemoveTask(id) }
+                    const onToogleTask = (e: ChangeEvent<HTMLInputElement>) => { props.onToogleTask(id, e.currentTarget.checked) }
                     return (
-                        <li key={id} style={isDone ? {opacity: '0.5'} : {opacity: '1'}} >
-                            <input type="checkbox" 
-                                   checked={isDone} 
-                                   onChange={() => {props.onToogleTask(id)}} /> 
-                            <span>{title}</span>
-                            <button onClick={() => {props.onRemoveTask(id)}}>Delete</button>
+                        <li key={id} className='task-item' >
+                            <div className={isDone ? 'unactive-task' : ''}>
+                                <input type="checkbox"  
+                                    checked={isDone}  
+                                    onChange={onToogleTask} /> 
+                                <span>{title}</span>
+                            </div>
+                            <button className='delete-task-button' onClick={onRemoveTask}>Delete</button>
                         </li>
                     )
                 })

@@ -1,30 +1,102 @@
-.error-message{
-    color: red
+.todo-list{
+    border: solid 1px black;
+    border-radius: 20px;
+    padding: 10px;
+}
+
+.input{
+    border: solid 1px black;
+}
+
+.normal-input{
+    border: solid 1px black;
 }
 
 .error-input{
     border-color: red;
 }
 
+.error-message{
+    font-size: 17px;
+    font-weight: bold;
+    color: red
+}
+
+.add-task-button{
+    margin-left: 5px;
+    width: 110px;
+    height: 20px;
+    border: none;
+    background-color: green;
+    color: white;
+    border-radius: 20px;
+}
+
+.main-buttons-wrapper{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.filter-button-wrapp{
+    display: flex;
+    justify-content: space-between;
+}
+
 .filter-button{
-    width: 75px;
+    width: 80px;
     margin-right: 5px;
     border: none;
-    border: solid 1px black
+    border: solid 1px rgb(157, 54, 191);
+    border-radius: 20px;
+}
+
+.filter-button:hover{
+    background-color: rgb(157, 54, 191);
+    color: white;
+    transition: 0.3s;
 }
 
 .normal{
     background-color: white;
-    color: black
+    color: rgb(157, 54, 191);
 }
 
 .active{
     background-color: rgb(157, 54, 191);
-    color: white
+    color: white;
 }
 
 .show-button{
     margin-top: 15px;
-    width: 300px;
+    width: 160px;
     height: 30px;
+    border: none;
+    border: 1px solid black;
+    border-radius: 20px;
+    background-color: white;
 }
+
+.show-button:hover{
+    background-color: black;
+    border-color: black;
+    transition: 0.3s;
+    color: white;
+}
+
+.remove-list-button {
+    width: 85px;
+    margin: 5px 0 0 5px;
+    height: 30px;
+    border: solid 1px red;
+    border-radius: 20px;
+    background-color: white;
+    color: red;
+}
+
+.remove-list-button:hover{
+    color: white;
+    background-color: red;
+    transition: 0.3s;
+}
+
