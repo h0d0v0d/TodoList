@@ -7,15 +7,16 @@ type AddItemFormPropsType = {
     addItem: (title: string) => void
 }
 
-export const AddItemForm = React.memo(function (props: AddItemFormPropsType) {
-    console.log('AddItemForm called')
+export const AddItemForm: React.FC<AddItemFormPropsType> = React.memo(({
+    addItem
+}) => {
 
     let [title, setTitle] = useState('')
     let [error, setError] = useState<string | null>(null)
 
-    const addItem = () => {
+    const addItemHandler = () => {
         if (title.trim() !== '') {
-            props.addItem(title);
+            addItem(title);
             setTitle('');
         } else {
             setError('Title is required');
@@ -31,21 +32,23 @@ export const AddItemForm = React.memo(function (props: AddItemFormPropsType) {
             setError(null);
         }
         if (e.charCode === 13) {
-            addItem();
+            addItemHandler();
         }
     }
 
-    return <div>
-        <TextField variant="outlined"
+    return (
+        <div>
+            <TextField variant="outlined"
                    error={!!error}
                    value={title}
                    onChange={onChangeHandler}
                    onKeyPress={onKeyPressHandler}
                    label="Title"
                    helperText={error}
-        />
-        <IconButton color="primary" onClick={addItem}>
-            <AddBox/>
-        </IconButton>
-    </div>
+            />
+            <IconButton color="primary" onClick={addItemHandler}>
+                <AddBox/>
+            </IconButton>
+        </div>
+    )
 })

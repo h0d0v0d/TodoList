@@ -1,4 +1,3 @@
-import axios from 'axios'
 import React, {useEffect, useState} from 'react'
 import { todoListAPI } from '../api/todolusts-api'
 
@@ -13,11 +12,6 @@ export const GetTodolists = () => {
    const [state, setState] = useState<any>(null)
 
    useEffect(() => {
-    /* axios.get('https://social-network.samuraijs.com/api/1.1/todo-lists', settings)
-    .then((res) => {
-        console.log(res.data)
-        setState(res.data)
-    }) */
     todoListAPI.getTodoLists()
     .then((res) => {console.log(res)})
 
@@ -25,6 +19,7 @@ export const GetTodolists = () => {
 
    return <div>{JSON.stringify(state)}</div>
 }
+
 export const CreateTodolist = () => {
    const [state, setState] = useState<any>(null)
 
@@ -35,6 +30,7 @@ export const CreateTodolist = () => {
 
    return <div>{JSON.stringify(state)}</div>
 }
+
 export const DeleteTodolist = () => {
    const [state, setState] = useState<any>(null)
    
@@ -45,18 +41,17 @@ export const DeleteTodolist = () => {
 
    return <div>{JSON.stringify(state)}</div> 
 }
+
 export const UpdateTodolistTitle = () => {
    const [state, setState] = useState<any>(null)
    
    useEffect(() => {
-      todoListAPI.updateTodoList(todoListId, 'Its new namess')
+      todoListAPI.updateTodoListTitle("07e2c145-3f94-4496-bf65-c0b470b385c7", 'Its new namess')
       .then(res => console.log(res))
      }, [])
 
    return <div>{JSON.stringify(state)}</div>
 }
-
-
 
 export const GetTasks = () => {
    const [state, setState] = useState<any>(null)
@@ -68,6 +63,7 @@ export const GetTasks = () => {
 
    return <div>{JSON.stringify(state)}</div>
 }
+
 export const CreateTask = () => {
    const [state, setState] = useState<any>(null)
    
@@ -78,6 +74,7 @@ export const CreateTask = () => {
 
    return <div>{JSON.stringify(state)}</div>
 }
+
 export const UpdateTaskTitle = () => {
    const [state, setState] = useState<any>(null)
    
@@ -88,6 +85,7 @@ export const UpdateTaskTitle = () => {
 
    return <div>{JSON.stringify(state)}</div>
 }
+
 export const UpdateTaskStatus = () => {
    const [state, setState] = useState<any>(null)
    
@@ -98,6 +96,7 @@ export const UpdateTaskStatus = () => {
 
    return <div>{JSON.stringify(state)}</div>
 }
+
 export const DeleteTask = () => {
    const [state, setState] = useState<any>(null)
    
