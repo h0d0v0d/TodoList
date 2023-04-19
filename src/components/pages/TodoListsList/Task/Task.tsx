@@ -4,7 +4,7 @@ import { Delete } from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
 import Checkbox from '@mui/material/Checkbox';
 import { TaskType, deleteTaskTC, updateTaskStatusTC, updateTaskTitleTC } from '../../../../state/reducers/tasks-reducer';
-import { useAppDispatch } from '../../../../state/store';
+import { useAppDispatch } from '../../../../hooks/storeHooks'
 
 
 type TaskPropsType = {

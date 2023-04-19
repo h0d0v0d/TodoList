@@ -1,6 +1,5 @@
-import { Dispatch } from "redux"
-
 import { todoListAPI } from '../../api/todolusts-api';
+import { AppThunkType } from "../store";
 
 export type FilterValuesType = 'all' | 'active' | 'completed';
 export type TodolistType = {
@@ -12,7 +11,7 @@ export type TodolistType = {
 
 const initialState: TodolistType[] = []
 
-export const todolistsReducer = (state: Array<TodolistType> = initialState, action: TodolistReducerActionType): Array<TodolistType> => {
+export const todolistsReducer = (state: Array<TodolistType> = initialState, action: TodoListsActionsType): Array<TodolistType> => {
     switch (action.type) {
         case 'SET-TODOLISTS': {
             return [...action.todoLists]
@@ -38,7 +37,7 @@ export const todolistsReducer = (state: Array<TodolistType> = initialState, acti
     }
 }
 
-type TodolistReducerActionType = ReturnType<PropertiesType<typeof todoListReducerActions>> 
+export type TodoListsActionsType = ReturnType<PropertiesType<typeof todoListReducerActions>> 
 type PropertiesType<T> = T extends {[key: string]: infer U} ? U : never
 
 export const todoListReducerActions = {
@@ -49,35 +48,44 @@ export const todoListReducerActions = {
     changeTodolistFilterAC: (id: string, filter: FilterValuesType) => ({type: 'CHANGE-TODOLIST-FILTER', id: id, filter: filter} as const)
 }
 
-export const setTodoListsTC = () => (dispacth: Dispatch<TodolistReducerActionType>) => {
-    todoListAPI.getTodoLists()
-    .then((todoLists: TodolistType[]) => {
+export const setTodoListsTC = (): AppThunkType => async dispacth => {
+    try{
+        const todoLists: TodolistType[] = await todoListAPI.getTodoLists()
         dispacth(todoListReducerActions.setTodoListsAC(todoLists))
-    })
+    } catch(e) {
+        console.log('Произошла ошибка в setTodoListsTC')
+        console.log(e)
+    }
 }
 
-export const createTodoListTC = (title: string) => (dispacth: Dispatch<TodolistReducerActionType>) => {
-    todoListAPI
-    .createTodoList(title)
-    .then((res) => {
-        const newTodoList = res.data.item
+export const createTodoListTC = (title: string): AppThunkType => async dispacth => {
+    try{
+        const res = await todoListAPI.createTodoList(title)
+        const newTodoList: TodolistType = res.data.item
         dispacth(todoListReducerActions.addTodolistAC(newTodoList))
-    })
+    } catch(e) {
+        console.log('Произошла ошибка в createTodoListTC')
+        console.log(e)
+    }
 }
 
-export const deleteTodoListTC = (id: string) => (dispacth: Dispatch<TodolistReducerActionType>) => {
-    todoListAPI
-    .delteTodoList(id)
-    .then((res) => {
+export const deleteTodoListTC = (id: string): AppThunkType => async dispacth => {
+    try{
+        const res = await todoListAPI.delteTodoList(id)
         dispacth(todoListReducerActions.removeTodolistAC(id))
-    })
+    } catch(e) {
+        console.log('Произошла ошибка в deleteTodoListTC')
+        console.log(e)
+    }
 }
 
-export const changeTodoListTitleTC = (id: string, newTitle: string) => (dispacth: Dispatch<TodolistReducerActionType>) => {
-    todoListAPI
-    .updateTodoListTitle(id, newTitle)
-    .then((res) => {
+export const changeTodoListTitleTC = (id: string, newTitle: string): AppThunkType => async dispacth => {
+    try{
+        const res = await todoListAPI.updateTodoListTitle(id, newTitle)
         dispacth(todoListReducerActions.changeTodolistTitleAC(id, newTitle))
-    })
+    } catch(e) {
+        console.log('Произошла ошибка в changeTodoListTitleTC')
+        console.log(e)
+    }
 }
 

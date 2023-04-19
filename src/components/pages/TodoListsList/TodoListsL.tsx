@@ -1,21 +1,20 @@
 import React, { useCallback, useEffect } from 'react'
-import { useSelector } from 'react-redux';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 
 import { Todolist } from './TodoList/Todolist';
 import { AddItemForm } from '../../AddItemForm/AddItemForm';
 
-import { FilterValuesType, TodolistType, changeTodoListTitleTC, createTodoListTC, deleteTodoListTC, setTodoListsTC, todoListReducerActions } from '../../../state/reducers/todolists-reducer';
-import { AppRootStateType, useAppDispatch } from '../../../state/store';
-import { TasksStateType } from '../../../state/reducers/tasks-reducer';
+import { FilterValuesType, changeTodoListTitleTC, createTodoListTC, deleteTodoListTC, setTodoListsTC, todoListReducerActions } from '../../../state/reducers/todolists-reducer';
+import { useAppDispatch } from '../../../hooks/storeHooks';
+import { useAppSelector } from '../../../hooks/storeHooks';
 
 const { changeTodolistFilterAC} = todoListReducerActions
 
 export const TodoListsL = () => {
 
-    const todolists = useSelector<AppRootStateType, Array<TodolistType>>(state => state.todolists)
-    const tasks = useSelector<AppRootStateType, TasksStateType>(state => state.tasks)
+    const todolists = useAppSelector(state => state.todolists)
+    const tasks = useAppSelector(state => state.tasks)
     const dispatch = useAppDispatch();
 
     const set = () => {

@@ -9,7 +9,7 @@ import { Task } from '../Task/Task'
 
 import { FilterValuesType } from '../../../../state/reducers/todolists-reducer';
 import { TaskType, createTaskTC, setTasksTC } from '../../../../state/reducers/tasks-reducer';
-import { useAppDispatch } from '../../../../state/store';
+import { useAppDispatch } from '../../../../hooks/storeHooks';
 
 type PropsType = {
     id: string
