@@ -31,7 +31,7 @@ export const Login = () => {
     mode: "onBlur",
   });
   const onSubmit = (data: { email: string; password: string }) => {
-    dispatch(loginTC(data))
+    dispatch(loginTC(data.email, data.password))
       .unwrap()
       .then(() => {
         navigate("/todo-lists");
