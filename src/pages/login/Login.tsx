@@ -10,8 +10,7 @@ import {
 
 import { useAppDispatch, useAppSelector } from "../../hooks/storeHooks";
 
-import { toast } from "react-toastify";
-import { loginTC } from "../../state/reducers/auth-reducer";
+import { authThunks } from "../../features/auth/auth.slice";
 
 export const Login = () => {
   const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
@@ -31,7 +30,8 @@ export const Login = () => {
     mode: "onBlur",
   });
   const onSubmit = (data: { email: string; password: string }) => {
-    dispatch(loginTC(data.email, data.password));
+    // @ts-ignore
+    dispatch(authThunks.login(data));
     reset();
   };
   if (isLoggedIn) {

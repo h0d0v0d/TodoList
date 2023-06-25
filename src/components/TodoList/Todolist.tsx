@@ -8,17 +8,17 @@ import { EditableSpan } from "../EditableSpan/EditableSpan";
 import { Task } from "../Task/Task";
 
 import { FilterValuesType } from "../../state/reducers/todolists-reducer";
-import {
+/* import {
   TaskType,
   createTaskTC,
   setTasksTC,
-} from "../../state/reducers/tasks-reducer";
+} from "../../state/reducers/tasks-reducer"; */
 import { useAppDispatch } from "../../hooks/storeHooks";
 
 type PropsType = {
   id: string;
   title: string;
-  tasks: Array<TaskType>;
+  tasks: Array<any>;
   changeFilter: (value: FilterValuesType, todolistId: string) => void;
   removeTodolist: (id: string) => void;
   changeTodolistTitle: (id: string, newTitle: string) => void;
@@ -39,7 +39,7 @@ export const Todolist: React.FC<PropsType> = React.memo(
 
     const addTask = useCallback(
       (title: string) => {
-        dispatch(createTaskTC(title, id));
+        // dispatch(createTaskTC(title, id));
       },
       [dispatch]
     );
@@ -59,7 +59,7 @@ export const Todolist: React.FC<PropsType> = React.memo(
     };
 
     useEffect(() => {
-      dispatch(setTasksTC(id));
+      // dispatch(setTasksTC(id));
     }, []);
 
     return (

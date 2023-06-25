@@ -1,4 +1,4 @@
-import thunkMiddleware, { ThunkAction } from "redux-thunk";
+/* import thunkMiddleware, { ThunkAction } from "redux-thunk";
 import {
   AnyAction,
   applyMiddleware,
@@ -39,3 +39,6 @@ export type AppRootStateType = ReturnType<typeof rootReducer>;
 window.store = store;
 // @ts-ignore
 window.s = store.getState;
+ */
+
+export const number = "3";

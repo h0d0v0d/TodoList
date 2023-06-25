@@ -9,13 +9,16 @@ import {
 } from "@mui/material";
 import { Menu } from "@mui/icons-material";
 import { Outlet } from "react-router-dom";
-import { useAppDispatch } from "../../hooks/storeHooks";
-import { meTC } from "../../state/reducers/auth-reducer";
+import { useAppDispatch, useAppSelector } from "../../hooks/storeHooks";
+
+import { authThunks } from "../../features/auth/auth.slice";
 
 export const Layout = () => {
   const dispatch = useAppDispatch();
+  const s = useAppSelector((state) => state.auth.isLoggedIn);
   useEffect(() => {
-    dispatch(meTC());
+    // @ts-ignore
+    // dispatch(authThunks.me({}));
   }, []);
   return (
     <div className="">

@@ -5,54 +5,52 @@ import Paper from "@mui/material/Paper";
 import { Todolist } from "../../components/TodoList/Todolist";
 import { AddItemForm } from "../../components/AddItemForm/AddItemForm";
 
-import {
+/* import {
   FilterValuesType,
   changeTodoListTitleTC,
   createTodoListTC,
   deleteTodoListTC,
   setTodoListsTC,
   todoListReducerActions,
-} from "../../state/reducers/todolists-reducer";
+} from "../../state/reducers/todolists-reducer"; */
 import { useAppDispatch } from "../../hooks/storeHooks";
 import { useAppSelector } from "../../hooks/storeHooks";
-import { meTC } from "../../state/reducers/auth-reducer";
 import { useNavigate } from "react-router-dom";
 
-const { changeTodolistFilterAC } = todoListReducerActions;
+// const { changeTodolistFilterAC } = todoListReducerActions;
 
 export const TodoListsL = () => {
-  const todolists = useAppSelector((state) => state.todolists);
-  const tasks = useAppSelector((state) => state.tasks);
+  /* const todolists = useAppSelector((state) => state.todolists);
+  const tasks = useAppSelector((state) => state.tasks); */
   const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const changeFilter = useCallback(function (
-    value: FilterValuesType,
+    value: any, //FilterValuesType,
     todolistId: string
   ) {
-    const action = changeTodolistFilterAC(todolistId, value);
-    dispatch(action);
-  },
-  []);
+    // const action = changeTodolistFilterAC(todolistId, value);
+    // dispatch(action);
+  }, []);
 
   const removeTodolist = useCallback(
     function (id: string) {
-      dispatch(deleteTodoListTC(id));
+      // dispatch(deleteTodoListTC(id));
     },
     [dispatch]
   );
 
   const changeTodolistTitle = useCallback(
     function (id: string, title: string) {
-      dispatch(changeTodoListTitleTC(id, title));
+      // dispatch(changeTodoListTitleTC(id, title));
     },
     [dispatch]
   );
 
   const addTodolist = useCallback(
     (title: string) => {
-      dispatch(createTodoListTC(title));
+      // dispatch(createTodoListTC(title));
     },
     [dispatch]
   );
@@ -63,7 +61,7 @@ export const TodoListsL = () => {
   }
 
   useEffect(() => {
-    dispatch(setTodoListsTC());
+    // dispatch(setTodoListsTC());
   }, []);
 
   return (
@@ -72,7 +70,7 @@ export const TodoListsL = () => {
         <AddItemForm addItem={addTodolist} />
       </Grid>
       <Grid container spacing={3}>
-        {todolists.map((tl) => {
+        {/* {todolists.map((tl) => {
           let allTodolistTasks = tasks[tl.id];
           return (
             <Grid item key={tl.id}>
@@ -89,7 +87,7 @@ export const TodoListsL = () => {
               </Paper>
             </Grid>
           );
-        })}
+        })} */}
       </Grid>
     </>
   );

@@ -1,5 +1,5 @@
 import { todoListAPI } from "../../api/todolusts-api";
-import { AppThunkType } from "../store";
+// import { AppThunkType } from "../store";
 
 type AuthStateType = typeof initialState;
 const initialState = {
@@ -29,7 +29,7 @@ export const authReducerActions = {
     ({ type: "login/SET-IS-LOGGED-IN", value } as const),
 };
 
-export const meTC = (): AppThunkType => async (dispatch) => {
+/* export const meTC = (): AppThunkType => async (dispatch) => {
   try {
     const res = await todoListAPI.me();
     if (res.data.resultCode === 0) {
@@ -48,4 +48,4 @@ export const loginTC =
         dispatch(authReducerActions.login(true));
       }
     } catch {}
-  };
+  }; */

@@ -3,27 +3,30 @@ import { EditableSpan } from "../EditableSpan/EditableSpan";
 import { Delete } from "@mui/icons-material";
 import IconButton from "@mui/material/IconButton";
 import Checkbox from "@mui/material/Checkbox";
-import {
+/* import {
   TaskType,
   deleteTaskTC,
   updateTaskStatusTC,
   updateTaskTitleTC,
-} from "../../state/reducers/tasks-reducer";
+} from "../../state/reducers/tasks-reducer"; */
 import { useAppDispatch } from "../../hooks/storeHooks";
 
 type TaskPropsType = {
-  task: TaskType;
+  task: any;
   todolistId: string;
 };
 export const Task = React.memo((props: TaskPropsType) => {
   const dispatch = useAppDispatch();
 
   const onClickHandler = useCallback(() => {
-    dispatch(deleteTaskTC(props.todolistId, props.task.id));
+    //dispatch(deleteTaskTC(props.todolistId, props.task.id));
   }, [dispatch]);
 
   const onChangeHandler = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
+    () => {
+      console.log("change");
+    },
+    /* (e: ChangeEvent<HTMLInputElement>) => {
       dispatch(
         updateTaskStatusTC(
           props.todolistId,
@@ -31,13 +34,13 @@ export const Task = React.memo((props: TaskPropsType) => {
           Number(e.currentTarget.checked)
         )
       );
-    },
+    }, */
     [dispatch]
   );
 
   const onTitleChangeHandler = useCallback(
     (newValue: string) => {
-      dispatch(updateTaskTitleTC(props.todolistId, props.task.id, newValue));
+      // dispatch(updateTaskTitleTC(props.todolistId, props.task.id, newValue));
     },
     [dispatch]
   );
