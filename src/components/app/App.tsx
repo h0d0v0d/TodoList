@@ -1,40 +1,29 @@
 import React from "react";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import Container from "@mui/material/Container";
-import { Menu } from "@mui/icons-material";
-
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { Provider } from "react-redux";
 
-import { TodoListsL } from "../pages/TodoListsList/TodoListsL";
-import Login from "../pages/login/Login";
+import { store } from "../../state/store";
 
-import "./App.css";
+import { TodoListsL } from "../../pages/TodoListsList/TodoListsL";
+import { Login } from "../../pages/login/Login";
+import { Layout } from "../Layout/Layout";
 
 const router = createBrowserRouter([
-  { path: "/", Component: TodoListsL },
-  { path: "/login", Component: Login },
-  { path: "/todo-lists", Component: TodoListsL },
+  {
+    path: "/",
+    Component: Layout,
+    children: [
+      { path: "/", Component: TodoListsL },
+      { path: "/login", Component: Login },
+      { path: "/todo-lists", Component: TodoListsL },
+    ],
+  },
 ]);
 
 export function App() {
   return (
-    <div className="App">
-      <AppBar position="static">
-        <Toolbar>
-          <IconButton edge="start" color="inherit" aria-label="menu">
-            <Menu />
-          </IconButton>
-          <Typography variant="h6">News</Typography>
-          <Button color="inherit">Login</Button>
-        </Toolbar>
-      </AppBar>
-      <Container fixed>
-        <RouterProvider router={router} />
-      </Container>
-    </div>
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   );
 }

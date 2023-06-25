@@ -43,6 +43,7 @@ export const loginTC =
   async (dispatch) => {
     try {
       const res = await todoListAPI.login(email, password);
+      console.log(res);
       if (res.data.resultCode === 0) {
         dispatch(authReducerActions.login(true));
       }

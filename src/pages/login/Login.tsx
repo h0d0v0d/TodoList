@@ -8,13 +8,13 @@ import {
   TextField,
 } from "@mui/material";
 
-import { useAppDispatch } from "../../../hooks/storeHooks";
+import { useAppDispatch, useAppSelector } from "../../hooks/storeHooks";
 
-import "./login.scss";
 import { toast } from "react-toastify";
-import { loginTC } from "../../../state/reducers/auth-reducer";
+import { loginTC } from "../../state/reducers/auth-reducer";
 
 export const Login = () => {
+  const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const {
@@ -24,24 +24,19 @@ export const Login = () => {
     reset,
   } = useForm({
     defaultValues: {
-      email: "maksimmarck@gmail.com",
-      password: "gfhn-56hrSk-2vr11",
+      email: "pixaretyiypop@gmail.com",
+      password: "vevJig-9sudbi-tosmyz",
       rememberMe: false,
     },
     mode: "onBlur",
   });
   const onSubmit = (data: { email: string; password: string }) => {
-    dispatch(loginTC(data.email, data.password))
-      .unwrap()
-      .then(() => {
-        navigate("/todo-lists");
-        toast.success("Successful login");
-      })
-      .catch(() => {
-        navigate("/error");
-      });
+    dispatch(loginTC(data.email, data.password));
     reset();
   };
+  if (isLoggedIn) {
+    navigate("/todo-lists");
+  }
   return (
     <div className="login-page">
       <form onSubmit={handleSubmit(onSubmit)}>
