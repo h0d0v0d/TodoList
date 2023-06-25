@@ -10,17 +10,25 @@ export const authAPI = {
     return instance.get<MeResponse>("auth/me");
   },
   login(args: LoginArgs) {
-    return instance.post("auth/login", args);
+    return instance.post<LoginResponse>("auth/login", args);
   },
+  logout() {
+    return instance.delete("auth/login");
+  },
+};
+
+export type User = {
+  userId: number;
+  email: string;
+  login: string;
 };
 
 // Me
 type MeResponse = {
   resultCode: number;
   messages: string[];
-  data: {
-    userId: number;
-  };
+  fieldsErrors: string[];
+  data: User;
 };
 
 // Login
@@ -29,4 +37,13 @@ export type LoginArgs = {
   password: string;
   rememberMe?: boolean;
   captcha?: boolean;
+};
+
+// LoginResponse
+
+type LoginResponse = {
+  data: { userId: number };
+  messages: string[];
+  fieldsErrors: string[];
+  resultCode: number;
 };
