@@ -5,7 +5,7 @@ const instance = axios.create({
   withCredentials: true,
 });
 
-export const todoListAPI = {
+export const tasksAPI = {
   getTasks(todoListID: string) {
     return instance.get<GetTasksResponse>(`${todoListID}/tasks`);
   },
@@ -74,7 +74,7 @@ type UpdateTaskTitleArgs = {
 };
 
 // Update Task Status
-type UpdateTaskStatusArgs = {
+export type UpdateTaskStatusArgs = {
   todoListId: string;
   taskId: string;
   title: string;
