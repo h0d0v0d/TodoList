@@ -14,22 +14,28 @@ export const tasksAPI = {
       title,
     });
   },
-  updateTaskTitle({ todoListId, taskId, title }: UpdateTaskTitleArgs) {
+  changeTask({ todoListId, taskId, ...restArgs }: ChangeTaskArgs) {
     return instance.put<CreateOrUpdateTaskResponse>(
       `${todoListId}/tasks/${taskId}`,
-      { title }
-    );
-  },
-  updateTaskStatus(args: UpdateTaskStatusArgs) {
-    const { todoListId, taskId, title, status } = args;
-    return instance.put<CreateOrUpdateTaskResponse>(
-      `${todoListId}/tasks/${taskId}`,
-      { title, status }
+      restArgs
     );
   },
   deleteTask({ todoListId, taskId }: DeleteTaskArgs) {
     return instance.delete<DeleteTaskResponse>(`${todoListId}/tasks/${taskId}`);
   },
+  /* changeTaskTitle({ todoListId, taskId, title }: ChangeTaskTitleArgs) {
+    return instance.put<CreateOrUpdateTaskResponse>(
+      `${todoListId}/tasks/${taskId}`,
+      { title }
+    );
+  },
+  changeTaskStatus(args: ChangeTaskStatusArgs) {
+    const { todoListId, taskId, title, status } = args;
+    return instance.put<CreateOrUpdateTaskResponse>(
+      `${todoListId}/tasks/${taskId}`,
+      { title, status }
+    );
+  }, */
 };
 
 export type TaskType = {
@@ -67,22 +73,30 @@ type CreateOrUpdateTaskResponse = {
 };
 
 // Update Task Title
-type UpdateTaskTitleArgs = {
+type ChangeTaskTitleArgs = {
   todoListId: string;
   taskId: string;
   title: string;
 };
 
 // Update Task Status
-export type UpdateTaskStatusArgs = {
+export type ChangeTaskStatusArgs = {
   todoListId: string;
   taskId: string;
   title: string;
   status: number;
 };
 
+// Change Task
+export type ChangeTaskArgs = {
+  todoListId: string;
+  taskId: string;
+  title?: string;
+  status?: string;
+};
+
 // DeleteTask
-type DeleteTaskArgs = {
+export type DeleteTaskArgs = {
   todoListId: string;
   taskId: string;
 };

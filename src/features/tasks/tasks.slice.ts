@@ -1,13 +1,19 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { TaskType, UpdateTaskStatusArgs, tasksAPI } from "./tasks.api";
+import {
+  ChangeTaskArgs,
+  DeleteTaskArgs,
+  TaskType,
+  tasksAPI,
+} from "./tasks.api";
 import { createAppAsyncThunk } from "../../common/utilis/create-app-async-thunk";
 import { thunkTryCatch } from "../../common/utilis/thunk-try-catch";
 
 enum THUNK_PREFIXES {
   TASKS = "tasks",
   SET_TASKS = "tasks/set-tasks",
-  CREATE_TASKS = "tasks/create-tasks",
-  UPDATE_TASK_STATUS = "tasks/update-task-status",
+  CREATED_TASKS = "tasks/create-tasks",
+  CHANGE_TASK = "tasks/change-task",
+  DELETE_TASK = "tasks/delete-tasks",
 }
 
 type SetTasksPayload = { todoListId: string; tasks: TaskType[] };
@@ -26,10 +32,10 @@ const setTasks = createAppAsyncThunk<SetTasksPayload, { todoListId: string }>(
 type CreateTasksArgs = { todoListId: string; title: string };
 type CreateTasksPayload = { todoListId: string; item: TaskType };
 const createTasks = createAppAsyncThunk<CreateTasksPayload, CreateTasksArgs>(
-  THUNK_PREFIXES.CREATE_TASKS,
+  THUNK_PREFIXES.CREATED_TASKS,
   async (args, thunkApi) => {
     return thunkTryCatch(thunkApi, async () => {
-      const { todoListId, title } = args;
+      const { todoListId } = args;
       const res = await tasksAPI.createTask(args);
       const item = res.data.data.item;
       return { todoListId, item };
@@ -37,18 +43,33 @@ const createTasks = createAppAsyncThunk<CreateTasksPayload, CreateTasksArgs>(
   }
 );
 
-type UpdateTaskStatus = { todoListId: string; taskId: string; item: TaskType };
-const updateTaskStatus = createAppAsyncThunk<
-  UpdateTaskStatus,
-  UpdateTaskStatusArgs
->(THUNK_PREFIXES.UPDATE_TASK_STATUS, async (args, thunkApi) => {
-  return thunkTryCatch(thunkApi, async () => {
-    const { todoListId, taskId } = args;
-    const res = await tasksAPI.updateTaskStatus(args);
-    const item = res.data.data.item;
-    return { todoListId, taskId, item };
-  });
-});
+type ChangeTaskPayload = {
+  todoListId: string;
+  taskId: string;
+  item: TaskType;
+};
+const changeTask = createAppAsyncThunk<ChangeTaskPayload, ChangeTaskArgs>(
+  THUNK_PREFIXES.CHANGE_TASK,
+  async (args, thunkApi) => {
+    return thunkTryCatch(thunkApi, async () => {
+      const { todoListId, taskId } = args;
+      const res = await tasksAPI.changeTask(args);
+      const item = res.data.data.item;
+      return { todoListId, taskId, item };
+    });
+  }
+);
+
+type DeleteTaskPaylaod = { todoListId: string; taskId: string };
+const deleteTask = createAppAsyncThunk<DeleteTaskPaylaod, DeleteTaskArgs>(
+  THUNK_PREFIXES.DELETE_TASK,
+  async (args, thunkApi) => {
+    return thunkTryCatch(thunkApi, async () => {
+      const res = await tasksAPI.deleteTask(args);
+      return args;
+    });
+  }
+);
 
 const slice = createSlice({
   name: THUNK_PREFIXES.TASKS,
@@ -72,8 +93,22 @@ const slice = createSlice({
         }
       )
       .addCase(
-        updateTaskStatus.fulfilled,
-        (state, action: PayloadAction<UpdateTaskStatus>) => {}
+        changeTask.fulfilled,
+        (state, action: PayloadAction<ChangeTaskPayload>) => {
+          state[action.payload.todoListId].map((task: TaskType) => {
+            return task.id === action.payload.taskId
+              ? action.payload.item
+              : task;
+          });
+        }
+      )
+      .addCase(
+        deleteTask.fulfilled,
+        (state, action: PayloadAction<DeleteTaskPaylaod>) => {
+          state[action.payload.todoListId].filter((task) => {
+            return task.id !== action.payload.taskId;
+          });
+        }
       );
   },
 });
