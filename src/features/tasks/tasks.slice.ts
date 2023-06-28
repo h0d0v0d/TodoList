@@ -1,24 +1,24 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { createAppAsyncThunk } from "../../common/utilis/create-app-async-thunk";
+import { thunkTryCatch } from "../../common/utilis/thunk-try-catch";
 import {
   ChangeTaskArgs,
   DeleteTaskArgs,
   TaskType,
   tasksAPI,
 } from "./tasks.api";
-import { createAppAsyncThunk } from "../../common/utilis/create-app-async-thunk";
-import { thunkTryCatch } from "../../common/utilis/thunk-try-catch";
 
 enum THUNK_PREFIXES {
   TASKS = "tasks",
-  SET_TASKS = "tasks/set-tasks",
+  GET_TASKS = "tasks/get-tasks",
   CREATED_TASKS = "tasks/create-tasks",
   CHANGE_TASK = "tasks/change-task",
   DELETE_TASK = "tasks/delete-tasks",
 }
 
-type SetTasksPayload = { todoListId: string; tasks: TaskType[] };
-const setTasks = createAppAsyncThunk<SetTasksPayload, { todoListId: string }>(
-  THUNK_PREFIXES.SET_TASKS,
+type GetTasksPayload = { todoListId: string; tasks: TaskType[] };
+const getTasks = createAppAsyncThunk<GetTasksPayload, { todoListId: string }>(
+  THUNK_PREFIXES.GET_TASKS,
   async (args, thunkApi) => {
     return thunkTryCatch(thunkApi, async () => {
       const { todoListId } = args;
@@ -78,8 +78,8 @@ const slice = createSlice({
   extraReducers(builder) {
     builder
       .addCase(
-        setTasks.fulfilled,
-        (state, action: PayloadAction<SetTasksPayload>) => {
+        getTasks.fulfilled,
+        (state, action: PayloadAction<GetTasksPayload>) => {
           state[action.payload.todoListId] = action.payload.tasks;
         }
       )

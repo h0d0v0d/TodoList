@@ -29,7 +29,7 @@ export const tasksAPI = {
       { title }
     );
   },
-  changeTaskStatus(args: ChangeTaskStatusArgs) {
+  changeTaskStatus(args: ChangeTeaskStatusArgs) {
     const { todoListId, taskId, title, status } = args;
     return instance.put<CreateOrUpdateTaskResponse>(
       `${todoListId}/tasks/${taskId}`,
@@ -70,21 +70,6 @@ type CreateOrUpdateTaskResponse = {
   };
   resultCode: number;
   messages: string[];
-};
-
-// Update Task Title
-type ChangeTaskTitleArgs = {
-  todoListId: string;
-  taskId: string;
-  title: string;
-};
-
-// Update Task Status
-export type ChangeTaskStatusArgs = {
-  todoListId: string;
-  taskId: string;
-  title: string;
-  status: number;
 };
 
 // Change Task
