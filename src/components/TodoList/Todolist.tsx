@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
 import { Delete } from "@mui/icons-material";
@@ -15,7 +15,11 @@ import { FilterValuesType } from "../../state/reducers/todolists-reducer";
 } from "../../state/reducers/tasks-reducer"; */
 import { useAppDispatch, useAppSelector } from "../../hooks/storeHooks";
 import { tasksThunks } from "../../features/tasks/tasks.slice";
-import { todoListsThunks } from "../../features/todoLists/todoLists.slice";
+import {
+  FilterType,
+  todoListsThunks,
+} from "../../features/todoLists/todoLists.slice";
+import { filterTasks } from "../../common/utilis/filterTasks";
 
 type PropsType = {
   id: string;
@@ -52,9 +56,13 @@ export const Todolist: React.FC<PropsType> = React.memo(
       [id, dispatch]
     );
 
-    const changeFilterHandler = () => {
-      console.log("Фильтр измениться, когда нибуль это сработает");
+    const changeFilterHandler = (filter: FilterType) => {
+      dispatch(todoListsThunks.changeFilter({ todoListId: id, filter }));
     };
+
+    const filteredTasks = useMemo(() => {
+      return filterTasks(tasks, filter);
+    }, [tasks, filter]);
 
     useEffect(() => {
       dispatch(tasksThunks.getTasks({ todoListId: id }));
@@ -70,28 +78,28 @@ export const Todolist: React.FC<PropsType> = React.memo(
         </h3>
         <AddItemForm addItem={addTask} />
         <div>
-          {tasks.map((t) => (
+          {filteredTasks.map((t) => (
             <Task key={t.id} task={t} todoListId={id} />
           ))}
         </div>
         <div style={{ paddingTop: "10px" }}>
           <Button
             variant={filter === "all" ? "outlined" : "text"}
-            onClick={changeFilterHandler}
+            onClick={() => changeFilterHandler("all")}
             color={"inherit"}
           >
             All
           </Button>
           <Button
             variant={filter === "active" ? "outlined" : "text"}
-            onClick={changeFilterHandler}
+            onClick={() => changeFilterHandler("active")}
             color={"primary"}
           >
             Active
           </Button>
           <Button
             variant={filter === "completed" ? "outlined" : "text"}
-            onClick={changeFilterHandler}
+            onClick={() => changeFilterHandler("completed")}
             color={"secondary"}
           >
             Completed

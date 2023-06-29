@@ -77,7 +77,7 @@ export const TodoListsL = () => {
                   title={tl.title}
                   tasks={allTodolistTasks}
                   changeFilter={changeFilter}
-                  filter={"all"}
+                  filter={tl.filter}
                   removeTodolist={removeTodolist}
                   changeTodolistTitle={changeTodolistTitle}
                 />

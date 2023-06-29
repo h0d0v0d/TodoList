@@ -16,6 +16,7 @@ enum THUNK_PREFIXES {
   CREATE_TODO_LIST = "todo-lists/create-todo-list",
   UPDATE_TODO_LIST_TITLE = "todo-lists/update-todo-list",
   DELETE_TODO_LIST = "todo-lists/delete-todo-list",
+  CHANGE_FILTER = "todo-lists/change-filter",
 }
 
 type GetTodoListsPayload = { todoLists: TodoListType[] };
@@ -24,7 +25,6 @@ const getTodoLists = createAppAsyncThunk<GetTodoListsPayload>(
   async (args, thunkApi) => {
     return thunkTryCatch(thunkApi, async () => {
       const res = await todoListAPI.getTodoLists();
-      console.log(res);
       const todoLists = res.data;
       return { todoLists };
     });
@@ -68,8 +68,18 @@ const deleteTodoList = createAppAsyncThunk<
   });
 });
 
+type ChangeFilterArgs = { todoListId: string; filter: FilterType };
+type ChangeFilterPayload = ChangeFilterArgs;
+const changeFilter = createAppAsyncThunk<ChangeFilterPayload, ChangeFilterArgs>(
+  THUNK_PREFIXES.CHANGE_FILTER,
+  (args, thunkApi) => {
+    return args;
+  }
+);
+
+export type FilterType = "all" | "active" | "completed";
 type AppTodoListType = TodoListType & {
-  filter: "all" | "active" | "completed";
+  filter: FilterType;
 };
 const slice = createSlice({
   name: THUNK_PREFIXES.TODO_LISTS,
@@ -119,6 +129,15 @@ const slice = createSlice({
           );
           state.todoListsData.splice(index, 1);
         }
+      )
+      .addCase(
+        changeFilter.fulfilled,
+        (state, action: PayloadAction<ChangeFilterArgs>) => {
+          const index = state.todoListsData.findIndex(
+            (tl) => tl.id === action.payload.todoListId
+          );
+          state.todoListsData[index].filter = action.payload.filter;
+        }
       );
   },
 });
@@ -129,4 +148,5 @@ export const todoListsThunks = {
   createTodoList,
   changeTodoListTitle,
   deleteTodoList,
+  changeFilter,
 };

@@ -3,12 +3,6 @@ import { EditableSpan } from "../EditableSpan/EditableSpan";
 import { Delete } from "@mui/icons-material";
 import IconButton from "@mui/material/IconButton";
 import Checkbox from "@mui/material/Checkbox";
-/* import {
-  TaskType,
-  deleteTaskTC,
-  updateTaskStatusTC,
-  updateTaskTitleTC,
-} from "../../state/reducers/tasks-reducer"; */
 import { useAppDispatch } from "../../hooks/storeHooks";
 import { tasksThunks } from "../../features/tasks/tasks.slice";
 import { TaskType } from "../../features/tasks/tasks.api";
@@ -32,7 +26,6 @@ export const Task: React.FC<TaskPropsType> = React.memo(
 
     const onChangeHandler = useCallback(
       (e: ChangeEvent<HTMLInputElement>) => {
-        console.log("cha");
         dispatch(
           tasksThunks.changeTask({
             todoListId,
@@ -42,15 +35,6 @@ export const Task: React.FC<TaskPropsType> = React.memo(
           })
         );
       },
-      /* (e: ChangeEvent<HTMLInputElement>) => {
-      dispatch(
-        updateTaskStatusTC(
-          props.todolistId,
-          props.task.id,
-          Number(e.currentTarget.checked)
-        )
-      );
-    }, */
       [dispatch]
     );
 
@@ -62,16 +46,12 @@ export const Task: React.FC<TaskPropsType> = React.memo(
     );
 
     return (
-      <div
-        key={task.id}
-        className={/* props.task.isDone */ true ? "is-done" : ""}
-      >
+      <div key={task.id} className={true ? "is-done" : ""}>
         <Checkbox
           checked={!!task.status}
           color="primary"
           onChange={onChangeHandler}
         />
-
         <EditableSpan value={task.title} onChange={onTitleChangeHandler} />
         <IconButton onClick={deleteTask}>
           <Delete />
