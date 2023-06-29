@@ -38,9 +38,15 @@ export const Task: React.FC<TaskPropsType> = React.memo(
       [dispatch]
     );
 
-    const onTitleChangeHandler = useCallback(
+    const changeTaskTitle = useCallback(
       (newValue: string) => {
-        // dispatch(updateTaskTitleTC(props.todolistId, props.task.id, newValue));
+        dispatch(
+          tasksThunks.changeTask({
+            todoListId,
+            taskId: task.id,
+            title: newValue,
+          })
+        );
       },
       [dispatch]
     );
@@ -52,11 +58,10 @@ export const Task: React.FC<TaskPropsType> = React.memo(
           color="primary"
           onChange={onChangeHandler}
         />
-        <EditableSpan value={task.title} onChange={onTitleChangeHandler} />
+        <EditableSpan value={task.title} onChange={changeTaskTitle} />
         <IconButton onClick={deleteTask}>
           <Delete />
         </IconButton>
-        <span>{task.status}</span>
       </div>
     );
   }

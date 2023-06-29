@@ -1,18 +1,8 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
 import { Delete } from "@mui/icons-material";
 
-import { AddItemForm } from "../AddItemForm/AddItemForm";
-import { EditableSpan } from "../EditableSpan/EditableSpan";
-import { Task } from "../Task/Task";
-
-import { FilterValuesType } from "../../state/reducers/todolists-reducer";
-/* import {
-  TaskType,
-  createTaskTC,
-  setTasksTC,
-} from "../../state/reducers/tasks-reducer"; */
 import { useAppDispatch, useAppSelector } from "../../hooks/storeHooks";
 import { tasksThunks } from "../../features/tasks/tasks.slice";
 import {
@@ -21,51 +11,56 @@ import {
 } from "../../features/todoLists/todoLists.slice";
 import { filterTasks } from "../../common/utilis/filterTasks";
 
+import { AddItemForm } from "../AddItemForm/AddItemForm";
+import { EditableSpan } from "../EditableSpan/EditableSpan";
+import { Task } from "../Task/Task";
+
+import { TaskType } from "../../features/tasks/tasks.api";
+
 type PropsType = {
-  id: string;
+  todoListId: string;
   title: string;
-  tasks: Array<any>;
-  changeFilter: (value: FilterValuesType, todolistId: string) => void;
-  removeTodolist: (id: string) => void;
-  changeTodolistTitle: (id: string, newTitle: string) => void;
-  filter: FilterValuesType;
+  filter: FilterType;
 };
 
 export const Todolist: React.FC<PropsType> = React.memo(
-  ({ id, title, filter }) => {
-    const tasks = useAppSelector((state) => state.tasks.tasksData[id]) || [];
+  ({ todoListId, title, filter }) => {
+    const tasks: TaskType[] = useAppSelector(
+      (state) => state.tasks.tasksData[todoListId]
+    );
     const dispatch = useAppDispatch();
 
     const addTask = useCallback(
       (title: string) => {
-        dispatch(tasksThunks.createTasks({ todoListId: id, title }));
+        dispatch(tasksThunks.createTasks({ todoListId, title }));
       },
       [dispatch]
     );
 
     const deleteTodoList = useCallback(() => {
-      dispatch(todoListsThunks.deleteTodoList({ todoListId: id }));
+      dispatch(todoListsThunks.deleteTodoList({ todoListId }));
     }, [dispatch]);
 
     const changeTodolistTitleHandler = useCallback(
       (title: string) => {
-        dispatch(
-          todoListsThunks.changeTodoListTitle({ todoListId: id, title })
-        );
+        dispatch(todoListsThunks.changeTodoListTitle({ todoListId, title }));
       },
-      [id, dispatch]
+      [dispatch]
     );
 
-    const changeFilterHandler = (filter: FilterType) => {
-      dispatch(todoListsThunks.changeFilter({ todoListId: id, filter }));
-    };
+    const changeFilterHandler = useCallback(
+      (filter: FilterType) => {
+        dispatch(todoListsThunks.changeFilter({ todoListId, filter }));
+      },
+      [dispatch]
+    );
 
     const filteredTasks = useMemo(() => {
-      return filterTasks(tasks, filter);
+      return filterTasks(tasks, filter) || [];
     }, [tasks, filter]);
 
     useEffect(() => {
-      dispatch(tasksThunks.getTasks({ todoListId: id }));
+      dispatch(tasksThunks.getTasks({ todoListId }));
     }, []);
 
     return (
@@ -79,7 +74,7 @@ export const Todolist: React.FC<PropsType> = React.memo(
         <AddItemForm addItem={addTask} />
         <div>
           {filteredTasks.map((t) => (
-            <Task key={t.id} task={t} todoListId={id} />
+            <Task key={t.id} task={t} todoListId={todoListId} />
           ))}
         </div>
         <div style={{ paddingTop: "10px" }}>

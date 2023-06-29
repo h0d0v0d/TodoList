@@ -113,7 +113,6 @@ const slice = createSlice({
       .addCase(
         changeTodoListTitle.fulfilled,
         (state, action: PayloadAction<ChangeTodoListTitlePayload>) => {
-          console.log(action.payload);
           state.todoListsData.forEach((tl: TodoListType) =>
             tl.id === action.payload.todoListId
               ? (tl.title = action.payload.title)

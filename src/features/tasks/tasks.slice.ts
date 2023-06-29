@@ -7,6 +7,7 @@ import {
   TaskType,
   tasksAPI,
 } from "./tasks.api";
+import { TodoListType } from "../todoLists/todoLists.api";
 
 enum THUNK_PREFIXES {
   TASKS = "tasks",

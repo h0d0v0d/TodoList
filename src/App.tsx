@@ -3,11 +3,11 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 
 import { store } from "./app/store";
+import { withRedirect } from "./HOC/withRedirect";
 
 import { TodoListsL } from "./pages/TodoLists/TodoLists";
 import { Login } from "./pages/login/Login";
 import { Layout } from "./components/Layout/Layout";
-import { withRedirect } from "./HOC/withRedirect";
 
 const router = createBrowserRouter([
   {

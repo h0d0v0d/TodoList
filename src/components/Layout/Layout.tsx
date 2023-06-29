@@ -9,8 +9,8 @@ import {
 } from "@mui/material";
 import { Menu } from "@mui/icons-material";
 import { Outlet, useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../../hooks/storeHooks";
 
+import { useAppDispatch } from "../../hooks/storeHooks";
 import { authThunks } from "../../features/auth/auth.slice";
 
 export const Layout = () => {

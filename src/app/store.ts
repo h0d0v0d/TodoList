@@ -9,9 +9,11 @@ import { authReducer } from "../features/auth/auth.slice";
 import { tasksReducer } from "../features/tasks/tasks.slice";
 import { todoListsReducer } from "../features/todoLists/todoLists.slice";
 import { AnyAction } from "redux";
+import { appSlice } from "./app.slice";
 
 export const store = configureStore({
   reducer: {
+    app: appSlice,
     auth: authReducer,
     tasks: tasksReducer,
     todoLists: todoListsReducer,
