@@ -1,19 +1,13 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { NavLink, useNavigate } from "react-router-dom";
-import {
-  Checkbox,
-  FormControlLabel,
-  FormGroup,
-  TextField,
-} from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { FormGroup, TextField } from "@mui/material";
 
-import { useAppDispatch, useAppSelector } from "../../hooks/storeHooks";
+import { useAppDispatch } from "../../hooks/storeHooks";
 
 import { authThunks } from "../../features/auth/auth.slice";
 
 export const Login = () => {
-  const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const {
@@ -30,13 +24,13 @@ export const Login = () => {
     mode: "onBlur",
   });
   const onSubmit = (data: { email: string; password: string }) => {
-    // @ts-ignore
-    dispatch(authThunks.login(data));
+    dispatch(authThunks.login(data))
+      .unwrap()
+      .then(() => {
+        navigate("/todo-lists");
+      });
     reset();
   };
-  if (isLoggedIn) {
-    navigate("/todo-lists");
-  }
   return (
     <div className="login-page">
       <form onSubmit={handleSubmit(onSubmit)}>

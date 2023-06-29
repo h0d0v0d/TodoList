@@ -13,7 +13,9 @@ import { FilterValuesType } from "../../state/reducers/todolists-reducer";
   createTaskTC,
   setTasksTC,
 } from "../../state/reducers/tasks-reducer"; */
-import { useAppDispatch } from "../../hooks/storeHooks";
+import { useAppDispatch, useAppSelector } from "../../hooks/storeHooks";
+import { tasksThunks } from "../../features/tasks/tasks.slice";
+import { todoListsThunks } from "../../features/todoLists/todoLists.slice";
 
 type PropsType = {
   id: string;
@@ -26,32 +28,28 @@ type PropsType = {
 };
 
 export const Todolist: React.FC<PropsType> = React.memo(
-  ({
-    id,
-    title,
-    tasks,
-    changeFilter,
-    removeTodolist,
-    changeTodolistTitle,
-    filter,
-  }) => {
+  ({ id, title, filter }) => {
+    const tasks = useAppSelector((state) => state.tasks.tasksData[id]) || [];
     const dispatch = useAppDispatch();
 
     const addTask = useCallback(
       (title: string) => {
-        // dispatch(createTaskTC(title, id));
+        dispatch(tasksThunks.createTasks({ todoListId: id, title }));
       },
       [dispatch]
     );
 
-    const removeTodolistHandler = () => {
-      removeTodolist(id);
-    };
+    const deleteTodoList = useCallback(() => {
+      dispatch(todoListsThunks.deleteTodoList({ todoListId: id }));
+    }, [dispatch]);
+
     const changeTodolistTitleHandler = useCallback(
       (title: string) => {
-        changeTodolistTitle(id, title);
+        dispatch(
+          todoListsThunks.changeTodoListTitle({ todoListId: id, title })
+        );
       },
-      [id, changeTodolistTitle]
+      [id, dispatch]
     );
 
     const changeFilterHandler = () => {
@@ -59,14 +57,14 @@ export const Todolist: React.FC<PropsType> = React.memo(
     };
 
     useEffect(() => {
-      // dispatch(setTasksTC(id));
+      dispatch(tasksThunks.getTasks({ todoListId: id }));
     }, []);
 
     return (
       <div>
         <h3>
           <EditableSpan value={title} onChange={changeTodolistTitleHandler} />
-          <IconButton onClick={removeTodolistHandler}>
+          <IconButton onClick={deleteTodoList}>
             <Delete />
           </IconButton>
         </h3>

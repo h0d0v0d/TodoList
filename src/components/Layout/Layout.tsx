@@ -8,17 +8,20 @@ import {
   Typography,
 } from "@mui/material";
 import { Menu } from "@mui/icons-material";
-import { Outlet } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../hooks/storeHooks";
+import { Outlet, useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../../hooks/storeHooks";
 
 import { authThunks } from "../../features/auth/auth.slice";
 
 export const Layout = () => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const s = useAppSelector((state) => state.auth.isLoggedIn);
   useEffect(() => {
-    // @ts-ignore
-    // dispatch(authThunks.me({}));
+    dispatch(authThunks.me({}))
+      .unwrap()
+      .then(() => {
+        navigate("/todo-lists");
+      });
   }, []);
   return (
     <div className="">

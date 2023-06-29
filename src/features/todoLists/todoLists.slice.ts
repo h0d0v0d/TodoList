@@ -8,6 +8,7 @@ import {
 } from "./todoLists.api";
 import { createAppAsyncThunk } from "../../common/utilis/create-app-async-thunk";
 import { thunkTryCatch } from "../../common/utilis/thunk-try-catch";
+import { tasksActions } from "../tasks/tasks.slice";
 
 enum THUNK_PREFIXES {
   TODO_LISTS = "todo-lists",
@@ -23,6 +24,7 @@ const getTodoLists = createAppAsyncThunk<GetTodoListsPayload>(
   async (args, thunkApi) => {
     return thunkTryCatch(thunkApi, async () => {
       const res = await todoListAPI.getTodoLists();
+      console.log(res);
       const todoLists = res.data;
       return { todoLists };
     });
@@ -47,7 +49,6 @@ const changeTodoListTitle = createAppAsyncThunk<
   ChangeTodoListTitleArgs
 >(THUNK_PREFIXES.UPDATE_TODO_LIST_TITLE, async (args, thunkApi) => {
   return thunkTryCatch(thunkApi, async () => {
-    const { todoListId, title } = args;
     const res = await todoListAPI.changeTodoListTitle(args);
     return args;
   });
@@ -60,6 +61,9 @@ const deleteTodoList = createAppAsyncThunk<
 >(THUNK_PREFIXES.DELETE_TODO_LIST, async (args, thunkApi) => {
   return thunkTryCatch(thunkApi, async () => {
     const res = await todoListAPI.deleteTodoList(args);
+    thunkApi.dispatch(
+      tasksActions.deleteTodoList({ todoListId: args.todoListId })
+    );
     return args;
   });
 });
@@ -67,7 +71,7 @@ const deleteTodoList = createAppAsyncThunk<
 const slice = createSlice({
   name: THUNK_PREFIXES.TODO_LISTS,
   initialState: {
-    todoLists: [] as TodoListType[],
+    todoListsData: [] as TodoListType[],
   },
   reducers: {},
   extraReducers(builder) {
@@ -75,33 +79,39 @@ const slice = createSlice({
       .addCase(
         getTodoLists.fulfilled,
         (state, action: PayloadAction<GetTodoListsPayload>) => {
-          state.todoLists = action.payload.todoLists;
+          state.todoListsData = action.payload.todoLists;
         }
       )
       .addCase(
         createTodoList.fulfilled,
         (state, action: PayloadAction<CreateTodoListPayload>) => {
-          state.todoLists.unshift(action.payload.item);
+          state.todoListsData.unshift(action.payload.item);
         }
       )
       .addCase(
         changeTodoListTitle.fulfilled,
         (state, action: PayloadAction<ChangeTodoListTitlePayload>) => {
-          state.todoLists.map((tl) =>
+          console.log(action.payload);
+          state.todoListsData.forEach((tl: TodoListType) =>
             tl.id === action.payload.todoListId
-              ? { ...tl, title: action.payload.title }
-              : tl
+              ? (tl.title = action.payload.title)
+              : null
           );
         }
       )
       .addCase(
         deleteTodoList.fulfilled,
         (state, action: PayloadAction<DeleteTodoListPayload>) => {
-          state.todoLists.filter((tl) => tl.id !== action.payload.todoListId);
+          //state.todoListsData.filter((tl) => tl.id !== action.payload.todoListId);
         }
       );
   },
 });
 
 export const todoListsReducer = slice.reducer;
-export const todoListsThunks = { getTodoLists, createTodoList };
+export const todoListsThunks = {
+  getTodoLists,
+  createTodoList,
+  changeTodoListTitle,
+  deleteTodoList,
+};

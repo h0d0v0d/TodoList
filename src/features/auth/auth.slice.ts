@@ -16,7 +16,6 @@ const me = createAppAsyncThunk<MePayload, {}>(
   async (args, thunkApi) => {
     return thunkTryCatch(thunkApi, async () => {
       const res = await authAPI.me();
-      console.log(res);
       return { isLoggedIn: true, user: res.data.data };
     });
   }

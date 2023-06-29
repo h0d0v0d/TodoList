@@ -73,21 +73,27 @@ const deleteTask = createAppAsyncThunk<DeleteTaskPaylaod, DeleteTaskArgs>(
 
 const slice = createSlice({
   name: THUNK_PREFIXES.TASKS,
-  initialState: {} as { [key: string]: TaskType[] },
-  reducers: {},
+  initialState: {
+    tasksData: {} as { [key: string]: TaskType[] },
+  },
+  reducers: {
+    deleteTodoList(state, action: PayloadAction<{ todoListId: string }>) {
+      delete state.tasksData[action.payload.todoListId];
+    },
+  },
   extraReducers(builder) {
     builder
       .addCase(
         getTasks.fulfilled,
         (state, action: PayloadAction<GetTasksPayload>) => {
-          state[action.payload.todoListId] = action.payload.tasks;
+          state.tasksData[action.payload.todoListId] = action.payload.tasks;
         }
       )
       .addCase(
         createTasks.fulfilled,
         (state, action: PayloadAction<CreateTasksPayload>) => {
-          state[action.payload.todoListId] = [
-            ...state[action.payload.todoListId],
+          state.tasksData[action.payload.todoListId] = [
+            ...state.tasksData[action.payload.todoListId],
             action.payload.item,
           ];
         }
@@ -95,7 +101,7 @@ const slice = createSlice({
       .addCase(
         changeTask.fulfilled,
         (state, action: PayloadAction<ChangeTaskPayload>) => {
-          state[action.payload.todoListId].map((task: TaskType) => {
+          state.tasksData[action.payload.todoListId].map((task: TaskType) => {
             return task.id === action.payload.taskId
               ? action.payload.item
               : task;
@@ -105,7 +111,7 @@ const slice = createSlice({
       .addCase(
         deleteTask.fulfilled,
         (state, action: PayloadAction<DeleteTaskPaylaod>) => {
-          state[action.payload.todoListId].filter((task) => {
+          state.tasksData[action.payload.todoListId].filter((task) => {
             return task.id !== action.payload.taskId;
           });
         }
@@ -114,3 +120,5 @@ const slice = createSlice({
 });
 
 export const tasksReducer = slice.reducer;
+export const tasksThunks = { getTasks, createTasks, changeTask, deleteTask };
+export const tasksActions = slice.actions;

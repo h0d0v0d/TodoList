@@ -16,12 +16,14 @@ import { AddItemForm } from "../../components/AddItemForm/AddItemForm";
 import { useAppDispatch } from "../../hooks/storeHooks";
 import { useAppSelector } from "../../hooks/storeHooks";
 import { useNavigate } from "react-router-dom";
+import { todoListsThunks } from "../../features/todoLists/todoLists.slice";
+import { TaskType } from "../../features/tasks/tasks.api";
 
 // const { changeTodolistFilterAC } = todoListReducerActions;
 
 export const TodoListsL = () => {
-  /* const todolists = useAppSelector((state) => state.todolists);
-  const tasks = useAppSelector((state) => state.tasks); */
+  const todolists = useAppSelector((state) => state.todoLists.todoListsData);
+  //const tasks = useAppSelector((state) => state.tasks)
   const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -50,7 +52,7 @@ export const TodoListsL = () => {
 
   const addTodolist = useCallback(
     (title: string) => {
-      // dispatch(createTodoListTC(title));
+      dispatch(todoListsThunks.createTodoList({ title }));
     },
     [dispatch]
   );
@@ -61,7 +63,7 @@ export const TodoListsL = () => {
   }
 
   useEffect(() => {
-    // dispatch(setTodoListsTC());
+    dispatch(todoListsThunks.getTodoLists());
   }, []);
 
   return (
@@ -70,8 +72,8 @@ export const TodoListsL = () => {
         <AddItemForm addItem={addTodolist} />
       </Grid>
       <Grid container spacing={3}>
-        {/* {todolists.map((tl) => {
-          let allTodolistTasks = tasks[tl.id];
+        {todolists.map((tl) => {
+          let allTodolistTasks = [] as TaskType[];
           return (
             <Grid item key={tl.id}>
               <Paper style={{ padding: "10px" }}>
@@ -87,7 +89,7 @@ export const TodoListsL = () => {
               </Paper>
             </Grid>
           );
-        })} */}
+        })}
       </Grid>
     </>
   );
