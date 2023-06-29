@@ -10,23 +10,39 @@ import Checkbox from "@mui/material/Checkbox";
   updateTaskTitleTC,
 } from "../../state/reducers/tasks-reducer"; */
 import { useAppDispatch } from "../../hooks/storeHooks";
+import { tasksThunks } from "../../features/tasks/tasks.slice";
+import { TaskType } from "../../features/tasks/tasks.api";
 
 type TaskPropsType = {
-  task: any;
-  todolistId: string;
+  task: TaskType;
+  todoListId: string;
 };
-export const Task = React.memo((props: TaskPropsType) => {
-  const dispatch = useAppDispatch();
+export const Task: React.FC<TaskPropsType> = React.memo(
+  ({ todoListId, task }) => {
+    const dispatch = useAppDispatch();
 
-  const onClickHandler = useCallback(() => {
-    //dispatch(deleteTaskTC(props.todolistId, props.task.id));
-  }, [dispatch]);
+    const deleteTask = useCallback(() => {
+      dispatch(
+        tasksThunks.deleteTask({
+          todoListId,
+          taskId: task.id,
+        })
+      );
+    }, [dispatch]);
 
-  const onChangeHandler = useCallback(
-    () => {
-      console.log("change");
-    },
-    /* (e: ChangeEvent<HTMLInputElement>) => {
+    const onChangeHandler = useCallback(
+      (e: ChangeEvent<HTMLInputElement>) => {
+        console.log("cha");
+        dispatch(
+          tasksThunks.changeTask({
+            todoListId,
+            taskId: task.id,
+            title: task.title,
+            status: Number(e.currentTarget.checked),
+          })
+        );
+      },
+      /* (e: ChangeEvent<HTMLInputElement>) => {
       dispatch(
         updateTaskStatusTC(
           props.todolistId,
@@ -35,32 +51,33 @@ export const Task = React.memo((props: TaskPropsType) => {
         )
       );
     }, */
-    [dispatch]
-  );
+      [dispatch]
+    );
 
-  const onTitleChangeHandler = useCallback(
-    (newValue: string) => {
-      // dispatch(updateTaskTitleTC(props.todolistId, props.task.id, newValue));
-    },
-    [dispatch]
-  );
+    const onTitleChangeHandler = useCallback(
+      (newValue: string) => {
+        // dispatch(updateTaskTitleTC(props.todolistId, props.task.id, newValue));
+      },
+      [dispatch]
+    );
 
-  return (
-    <div
-      key={props.task.id}
-      className={/* props.task.isDone */ true ? "is-done" : ""}
-    >
-      <Checkbox
-        checked={!!props.task.status}
-        color="primary"
-        onChange={onChangeHandler}
-      />
+    return (
+      <div
+        key={task.id}
+        className={/* props.task.isDone */ true ? "is-done" : ""}
+      >
+        <Checkbox
+          checked={!!task.status}
+          color="primary"
+          onChange={onChangeHandler}
+        />
 
-      <EditableSpan value={props.task.title} onChange={onTitleChangeHandler} />
-      <IconButton onClick={onClickHandler}>
-        <Delete />
-      </IconButton>
-      <span>{props.task.status}</span>
-    </div>
-  );
-});
+        <EditableSpan value={task.title} onChange={onTitleChangeHandler} />
+        <IconButton onClick={deleteTask}>
+          <Delete />
+        </IconButton>
+        <span>{task.status}</span>
+      </div>
+    );
+  }
+);

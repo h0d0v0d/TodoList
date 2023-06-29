@@ -71,7 +71,7 @@ export const Todolist: React.FC<PropsType> = React.memo(
         <AddItemForm addItem={addTask} />
         <div>
           {tasks.map((t) => (
-            <Task key={t.id} task={t} todolistId={id} />
+            <Task key={t.id} task={t} todoListId={id} />
           ))}
         </div>
         <div style={{ paddingTop: "10px" }}>

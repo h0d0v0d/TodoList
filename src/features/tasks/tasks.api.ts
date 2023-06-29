@@ -76,8 +76,8 @@ type CreateOrUpdateTaskResponse = {
 export type ChangeTaskArgs = {
   todoListId: string;
   taskId: string;
-  title?: string;
-  status?: string;
+  title: string;
+  status?: number;
 };
 
 // DeleteTask

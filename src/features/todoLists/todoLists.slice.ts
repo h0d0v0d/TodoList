@@ -68,10 +68,13 @@ const deleteTodoList = createAppAsyncThunk<
   });
 });
 
+type AppTodoListType = TodoListType & {
+  filter: "all" | "active" | "completed";
+};
 const slice = createSlice({
   name: THUNK_PREFIXES.TODO_LISTS,
   initialState: {
-    todoListsData: [] as TodoListType[],
+    todoListsData: [] as AppTodoListType[],
   },
   reducers: {},
   extraReducers(builder) {
@@ -79,13 +82,22 @@ const slice = createSlice({
       .addCase(
         getTodoLists.fulfilled,
         (state, action: PayloadAction<GetTodoListsPayload>) => {
-          state.todoListsData = action.payload.todoLists;
+          const todoLists: AppTodoListType[] = action.payload.todoLists.map(
+            (tl) => {
+              return { ...tl, filter: "all" };
+            }
+          );
+          state.todoListsData = todoLists;
         }
       )
       .addCase(
         createTodoList.fulfilled,
         (state, action: PayloadAction<CreateTodoListPayload>) => {
-          state.todoListsData.unshift(action.payload.item);
+          const item: AppTodoListType = {
+            ...action.payload.item,
+            filter: "all",
+          };
+          state.todoListsData.unshift(item);
         }
       )
       .addCase(
@@ -102,7 +114,10 @@ const slice = createSlice({
       .addCase(
         deleteTodoList.fulfilled,
         (state, action: PayloadAction<DeleteTodoListPayload>) => {
-          //state.todoListsData.filter((tl) => tl.id !== action.payload.todoListId);
+          const index = state.todoListsData.findIndex(
+            (tl) => tl.id === action.payload.todoListId
+          );
+          state.todoListsData.splice(index, 1);
         }
       );
   },

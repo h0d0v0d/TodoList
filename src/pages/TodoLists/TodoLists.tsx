@@ -57,11 +57,6 @@ export const TodoListsL = () => {
     [dispatch]
   );
 
-  if (!isLoggedIn) {
-    navigate("/login");
-  } else {
-  }
-
   useEffect(() => {
     dispatch(todoListsThunks.getTodoLists());
   }, []);

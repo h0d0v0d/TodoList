@@ -101,19 +101,23 @@ const slice = createSlice({
       .addCase(
         changeTask.fulfilled,
         (state, action: PayloadAction<ChangeTaskPayload>) => {
-          state.tasksData[action.payload.todoListId].map((task: TaskType) => {
-            return task.id === action.payload.taskId
-              ? action.payload.item
-              : task;
-          });
+          const index = state.tasksData[action.payload.todoListId].findIndex(
+            (task) => task.id === action.payload.taskId
+          );
+          state.tasksData[action.payload.todoListId].splice(
+            index,
+            1,
+            action.payload.item
+          );
         }
       )
       .addCase(
         deleteTask.fulfilled,
         (state, action: PayloadAction<DeleteTaskPaylaod>) => {
-          state.tasksData[action.payload.todoListId].filter((task) => {
-            return task.id !== action.payload.taskId;
-          });
+          const index = state.tasksData[action.payload.todoListId].findIndex(
+            (task) => task.id === action.payload.taskId
+          );
+          state.tasksData[action.payload.todoListId].splice(index, 1);
         }
       );
   },
