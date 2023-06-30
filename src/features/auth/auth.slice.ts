@@ -4,12 +4,12 @@ import { LoginArgs, User, authAPI } from "./auth.api";
 import { createAppAsyncThunk } from "../../common/utilis/create-app-async-thunk";
 import { thunkTryCatch } from "../../common/utilis/thunk-try-catch";
 
-enum THUNK_PREFIXES {
-  AUTH = "auth",
-  ME = "auth/me",
-  LOGIN = "auth/login",
-  LOGOUT = "auth/logout",
-}
+const THUNK_PREFIXES = {
+  AUTH: "auth",
+  ME: "auth/me",
+  LOGIN: "auth/login",
+  LOGOUT: "auth/logout",
+} as const;
 
 type MePayload = { isLoggedIn: boolean; user: User };
 const me = createAppAsyncThunk<MePayload, {}>(THUNK_PREFIXES.ME, async (args, thunkApi) => {

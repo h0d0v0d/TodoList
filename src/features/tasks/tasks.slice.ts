@@ -6,13 +6,13 @@ import { ChangeTaskArgs, DeleteTaskArgs, TaskType, tasksAPI } from "./tasks.api"
 import { todoListsThunks } from "../todoLists/todoLists.slice";
 import { authThunks } from "../auth/auth.slice";
 
-enum THUNK_PREFIXES {
-  TASKS = "tasks",
-  GET_TASKS = "tasks/get-tasks",
-  CREATED_TASKS = "tasks/create-tasks",
-  CHANGE_TASK = "tasks/change-task",
-  DELETE_TASK = "tasks/delete-tasks",
-}
+const THUNK_PREFIXES = {
+  TASKS: "tasks",
+  GET_TASKS: "tasks/get-tasks",
+  CREATED_TASKS: "tasks/create-tasks",
+  CHANGE_TASK: "tasks/change-task",
+  DELETE_TASK: "tasks/delete-tasks",
+} as const;
 
 type GetTasksPayload = { todoListId: string; tasks: TaskType[] };
 const getTasks = createAppAsyncThunk<GetTasksPayload, { todoListId: string }>(

@@ -9,7 +9,7 @@ export const thunkTryCatch = async <T>(
   options?: Options
 ): Promise<T | ReturnType<typeof thunkAPI.rejectWithValue>> => {
   const { rejectWithValue } = thunkAPI;
-  const showGlobalError = options?.showGlobalError ?? true;
+  const showGlobalError = options?.showGlobalError ?? false;
 
   try {
     return await promise();

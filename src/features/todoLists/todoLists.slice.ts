@@ -10,14 +10,14 @@ import { createAppAsyncThunk } from "../../common/utilis/create-app-async-thunk"
 import { thunkTryCatch } from "../../common/utilis/thunk-try-catch";
 import { authThunks } from "../auth/auth.slice";
 
-enum THUNK_PREFIXES {
-  TODO_LISTS = "todo-lists",
-  GET_TODO_LISTS = "todo-lists/get-todo-lists",
-  CREATE_TODO_LIST = "todo-lists/create-todo-list",
-  UPDATE_TODO_LIST_TITLE = "todo-lists/update-todo-list",
-  DELETE_TODO_LIST = "todo-lists/delete-todo-list",
-  CHANGE_FILTER = "todo-lists/change-filter",
-}
+const THUNK_PREFIXES = {
+  TODO_LISTS: "todo-lists",
+  GET_TODO_LISTS: "todo-lists/get-todo-lists",
+  CREATE_TODO_LIST: "todo-lists/create-todo-list",
+  UPDATE_TODO_LIST_TITLE: "todo-lists/update-todo-list",
+  DELETE_TODO_LIST: "todo-lists/delete-todo-list",
+  CHANGE_FILTER: "todo-lists/change-filter",
+} as const;
 
 type GetTodoListsPayload = { todoLists: TodoListType[] };
 const getTodoLists = createAppAsyncThunk<GetTodoListsPayload>(THUNK_PREFIXES.GET_TODO_LISTS, async (args, thunkApi) => {
@@ -48,7 +48,8 @@ const changeTodoListTitle = createAppAsyncThunk<ChangeTodoListTitlePayload, Chan
       const res = await todoListAPI.changeTodoListTitle(args);
       return args;
     });
-  }
+  },
+  {}
 );
 
 type DeleteTodoListPayload = DeleteTodoListArgs;

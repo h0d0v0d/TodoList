@@ -1,13 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-enum THUNK_PREFIXES {
-  APP = "app",
-}
+const THUNK_PREFIXES = {
+  APP: "app",
+} as const;
 
 const slice = createSlice({
   name: THUNK_PREFIXES.APP,
   initialState: {
-    globalLoading: true,
+    error: null as string | null,
+    globalLoading: false,
   },
   reducers: {},
   extraReducers(builder) {},
