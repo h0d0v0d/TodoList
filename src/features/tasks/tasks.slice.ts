@@ -1,13 +1,8 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+
 import { createAppAsyncThunk } from "../../common/utilis/create-app-async-thunk";
 import { thunkTryCatch } from "../../common/utilis/thunk-try-catch";
-import {
-  ChangeTaskArgs,
-  DeleteTaskArgs,
-  TaskType,
-  tasksAPI,
-} from "./tasks.api";
-import { TodoListType } from "../todoLists/todoLists.api";
+import { ChangeTaskArgs, DeleteTaskArgs, TaskType, tasksAPI } from "./tasks.api";
 
 enum THUNK_PREFIXES {
   TASKS = "tasks",
@@ -78,49 +73,32 @@ const slice = createSlice({
     tasksData: {} as { [key: string]: TaskType[] },
   },
   reducers: {
+    inzializedTask(state, action: PayloadAction<{ toddoListId: string }>) {
+      state.tasksData[action.payload.toddoListId] = [];
+    },
     deleteTodoList(state, action: PayloadAction<{ todoListId: string }>) {
       delete state.tasksData[action.payload.todoListId];
     },
   },
   extraReducers(builder) {
     builder
-      .addCase(
-        getTasks.fulfilled,
-        (state, action: PayloadAction<GetTasksPayload>) => {
-          state.tasksData[action.payload.todoListId] = action.payload.tasks;
-        }
-      )
-      .addCase(
-        createTasks.fulfilled,
-        (state, action: PayloadAction<CreateTasksPayload>) => {
-          state.tasksData[action.payload.todoListId] = [
-            ...state.tasksData[action.payload.todoListId],
-            action.payload.item,
-          ];
-        }
-      )
-      .addCase(
-        changeTask.fulfilled,
-        (state, action: PayloadAction<ChangeTaskPayload>) => {
-          const index = state.tasksData[action.payload.todoListId].findIndex(
-            (task) => task.id === action.payload.taskId
-          );
-          state.tasksData[action.payload.todoListId].splice(
-            index,
-            1,
-            action.payload.item
-          );
-        }
-      )
-      .addCase(
-        deleteTask.fulfilled,
-        (state, action: PayloadAction<DeleteTaskPaylaod>) => {
-          const index = state.tasksData[action.payload.todoListId].findIndex(
-            (task) => task.id === action.payload.taskId
-          );
-          state.tasksData[action.payload.todoListId].splice(index, 1);
-        }
-      );
+      .addCase(getTasks.fulfilled, (state, action: PayloadAction<GetTasksPayload>) => {
+        state.tasksData[action.payload.todoListId] = action.payload.tasks;
+      })
+      .addCase(createTasks.fulfilled, (state, action: PayloadAction<CreateTasksPayload>) => {
+        state.tasksData[action.payload.todoListId] = [
+          ...state.tasksData[action.payload.todoListId],
+          action.payload.item,
+        ];
+      })
+      .addCase(changeTask.fulfilled, (state, action: PayloadAction<ChangeTaskPayload>) => {
+        const index = state.tasksData[action.payload.todoListId].findIndex((task) => task.id === action.payload.taskId);
+        state.tasksData[action.payload.todoListId].splice(index, 1, action.payload.item);
+      })
+      .addCase(deleteTask.fulfilled, (state, action: PayloadAction<DeleteTaskPaylaod>) => {
+        const index = state.tasksData[action.payload.todoListId].findIndex((task) => task.id === action.payload.taskId);
+        state.tasksData[action.payload.todoListId].splice(index, 1);
+      });
   },
 });
 

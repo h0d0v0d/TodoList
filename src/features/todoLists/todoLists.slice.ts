@@ -20,53 +20,51 @@ enum THUNK_PREFIXES {
 }
 
 type GetTodoListsPayload = { todoLists: TodoListType[] };
-const getTodoLists = createAppAsyncThunk<GetTodoListsPayload>(
-  THUNK_PREFIXES.GET_TODO_LISTS,
+const getTodoLists = createAppAsyncThunk<GetTodoListsPayload>(THUNK_PREFIXES.GET_TODO_LISTS, async (args, thunkApi) => {
+  return thunkTryCatch(thunkApi, async () => {
+    const res = await todoListAPI.getTodoLists();
+    const todoLists = res.data;
+    todoLists.forEach((tl) => {
+      thunkApi.dispatch(tasksActions.inzializedTask({ toddoListId: tl.id }));
+    });
+    return { todoLists };
+  });
+});
+
+type CreateTodoListPayload = { item: TodoListType };
+const createTodoList = createAppAsyncThunk<CreateTodoListPayload, CreateTodoListArgs>(
+  THUNK_PREFIXES.CREATE_TODO_LIST,
   async (args, thunkApi) => {
     return thunkTryCatch(thunkApi, async () => {
-      const res = await todoListAPI.getTodoLists();
-      const todoLists = res.data;
-      return { todoLists };
+      const res = await todoListAPI.createTodoList(args);
+      const item = res.data.data.item;
+      return { item };
     });
   }
 );
 
-type CreateTodoListPayload = { item: TodoListType };
-const createTodoList = createAppAsyncThunk<
-  CreateTodoListPayload,
-  CreateTodoListArgs
->(THUNK_PREFIXES.CREATE_TODO_LIST, async (args, thunkApi) => {
-  return thunkTryCatch(thunkApi, async () => {
-    const res = await todoListAPI.createTodoList(args);
-    const item = res.data.data.item;
-    return { item };
-  });
-});
-
 type ChangeTodoListTitlePayload = ChangeTodoListTitleArgs;
-const changeTodoListTitle = createAppAsyncThunk<
-  ChangeTodoListTitlePayload,
-  ChangeTodoListTitleArgs
->(THUNK_PREFIXES.UPDATE_TODO_LIST_TITLE, async (args, thunkApi) => {
-  return thunkTryCatch(thunkApi, async () => {
-    const res = await todoListAPI.changeTodoListTitle(args);
-    return args;
-  });
-});
+const changeTodoListTitle = createAppAsyncThunk<ChangeTodoListTitlePayload, ChangeTodoListTitleArgs>(
+  THUNK_PREFIXES.UPDATE_TODO_LIST_TITLE,
+  async (args, thunkApi) => {
+    return thunkTryCatch(thunkApi, async () => {
+      const res = await todoListAPI.changeTodoListTitle(args);
+      return args;
+    });
+  }
+);
 
 type DeleteTodoListPayload = DeleteTodoListArgs;
-const deleteTodoList = createAppAsyncThunk<
-  DeleteTodoListPayload,
-  DeleteTodoListArgs
->(THUNK_PREFIXES.DELETE_TODO_LIST, async (args, thunkApi) => {
-  return thunkTryCatch(thunkApi, async () => {
-    const res = await todoListAPI.deleteTodoList(args);
-    thunkApi.dispatch(
-      tasksActions.deleteTodoList({ todoListId: args.todoListId })
-    );
-    return args;
-  });
-});
+const deleteTodoList = createAppAsyncThunk<DeleteTodoListPayload, DeleteTodoListArgs>(
+  THUNK_PREFIXES.DELETE_TODO_LIST,
+  async (args, thunkApi) => {
+    return thunkTryCatch(thunkApi, async () => {
+      const res = await todoListAPI.deleteTodoList(args);
+      thunkApi.dispatch(tasksActions.deleteTodoList({ todoListId: args.todoListId }));
+      return args;
+    });
+  }
+);
 
 type ChangeFilterArgs = { todoListId: string; filter: FilterType };
 type ChangeFilterPayload = ChangeFilterArgs;
@@ -89,55 +87,32 @@ const slice = createSlice({
   reducers: {},
   extraReducers(builder) {
     builder
-      .addCase(
-        getTodoLists.fulfilled,
-        (state, action: PayloadAction<GetTodoListsPayload>) => {
-          const todoLists: AppTodoListType[] = action.payload.todoLists.map(
-            (tl) => {
-              return { ...tl, filter: "all" };
-            }
-          );
-          state.todoListsData = todoLists;
-        }
-      )
-      .addCase(
-        createTodoList.fulfilled,
-        (state, action: PayloadAction<CreateTodoListPayload>) => {
-          const item: AppTodoListType = {
-            ...action.payload.item,
-            filter: "all",
-          };
-          state.todoListsData.unshift(item);
-        }
-      )
-      .addCase(
-        changeTodoListTitle.fulfilled,
-        (state, action: PayloadAction<ChangeTodoListTitlePayload>) => {
-          state.todoListsData.forEach((tl: TodoListType) =>
-            tl.id === action.payload.todoListId
-              ? (tl.title = action.payload.title)
-              : null
-          );
-        }
-      )
-      .addCase(
-        deleteTodoList.fulfilled,
-        (state, action: PayloadAction<DeleteTodoListPayload>) => {
-          const index = state.todoListsData.findIndex(
-            (tl) => tl.id === action.payload.todoListId
-          );
-          state.todoListsData.splice(index, 1);
-        }
-      )
-      .addCase(
-        changeFilter.fulfilled,
-        (state, action: PayloadAction<ChangeFilterArgs>) => {
-          const index = state.todoListsData.findIndex(
-            (tl) => tl.id === action.payload.todoListId
-          );
-          state.todoListsData[index].filter = action.payload.filter;
-        }
-      );
+      .addCase(getTodoLists.fulfilled, (state, action: PayloadAction<GetTodoListsPayload>) => {
+        const todoLists: AppTodoListType[] = action.payload.todoLists.map((tl) => {
+          return { ...tl, filter: "all" };
+        });
+        state.todoListsData = todoLists;
+      })
+      .addCase(createTodoList.fulfilled, (state, action: PayloadAction<CreateTodoListPayload>) => {
+        const item: AppTodoListType = {
+          ...action.payload.item,
+          filter: "all",
+        };
+        state.todoListsData.unshift(item);
+      })
+      .addCase(changeTodoListTitle.fulfilled, (state, action: PayloadAction<ChangeTodoListTitlePayload>) => {
+        state.todoListsData.forEach((tl: TodoListType) =>
+          tl.id === action.payload.todoListId ? (tl.title = action.payload.title) : null
+        );
+      })
+      .addCase(deleteTodoList.fulfilled, (state, action: PayloadAction<DeleteTodoListPayload>) => {
+        const index = state.todoListsData.findIndex((tl) => tl.id === action.payload.todoListId);
+        state.todoListsData.splice(index, 1);
+      })
+      .addCase(changeFilter.fulfilled, (state, action: PayloadAction<ChangeFilterArgs>) => {
+        const index = state.todoListsData.findIndex((tl) => tl.id === action.payload.todoListId);
+        state.todoListsData[index].filter = action.payload.filter;
+      });
   },
 });
 
