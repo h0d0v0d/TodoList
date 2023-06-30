@@ -9,7 +9,7 @@ import { todoListsThunks } from "../../features/todoLists/todoLists.slice";
 import { Todolist } from "../../components/TodoList/Todolist";
 import { AddItemForm } from "../../components/AddItemForm/AddItemForm";
 
-export const TodoListsL = () => {
+export const TodoLists = () => {
   const todolists = useAppSelector((state) => state.todoLists.todoListsData);
   const dispatch = useAppDispatch();
 
@@ -34,11 +34,7 @@ export const TodoListsL = () => {
           return (
             <Grid item key={tl.id}>
               <Paper style={{ padding: "10px" }}>
-                <Todolist
-                  todoListId={tl.id}
-                  title={tl.title}
-                  filter={tl.filter}
-                />
+                <Todolist todoListId={tl.id} title={tl.title} filter={tl.filter} />
               </Paper>
             </Grid>
           );

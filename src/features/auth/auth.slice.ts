@@ -15,7 +15,11 @@ type MePayload = { isLoggedIn: boolean; user: User };
 const me = createAppAsyncThunk<MePayload, {}>(THUNK_PREFIXES.ME, async (args, thunkApi) => {
   return thunkTryCatch(thunkApi, async () => {
     const res = await authAPI.me();
-    return { isLoggedIn: true, user: res.data.data };
+    if (res.data.resultCode === 0) {
+      return { isLoggedIn: true, user: res.data.data };
+    } else {
+      return thunkApi.rejectWithValue({ value: "error" });
+    }
   });
 });
 
@@ -26,7 +30,6 @@ const login = createAppAsyncThunk<LoginPayload, LoginArgs>(THUNK_PREFIXES.LOGIN,
       email: args.email,
       password: args.password,
     });
-    console.log(res);
     return { isLoggedIn: true, userId: res.data.data.userId };
   });
 });

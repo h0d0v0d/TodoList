@@ -1,9 +1,10 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 import { createAppAsyncThunk } from "../../common/utilis/create-app-async-thunk";
 import { thunkTryCatch } from "../../common/utilis/thunk-try-catch";
 import { ChangeTaskArgs, DeleteTaskArgs, TaskType, tasksAPI } from "./tasks.api";
 import { todoListsThunks } from "../todoLists/todoLists.slice";
+import { authThunks } from "../auth/auth.slice";
 
 enum THUNK_PREFIXES {
   TASKS = "tasks",
@@ -40,11 +41,7 @@ const createTasks = createAppAsyncThunk<CreateTasksPayload, CreateTasksArgs>(
   }
 );
 
-type ChangeTaskPayload = {
-  todoListId: string;
-  taskId: string;
-  item: TaskType;
-};
+type ChangeTaskPayload = { todoListId: string; taskId: string; item: TaskType };
 const changeTask = createAppAsyncThunk<ChangeTaskPayload, ChangeTaskArgs>(
   THUNK_PREFIXES.CHANGE_TASK,
   async (args, thunkApi) => {
@@ -76,16 +73,16 @@ const slice = createSlice({
   reducers: {},
   extraReducers(builder) {
     builder
-      .addCase(getTasks.fulfilled, (state, action: PayloadAction<GetTasksPayload>) => {
+      .addCase(getTasks.fulfilled, (state, action) => {
         state.tasksData[action.payload.todoListId] = action.payload.tasks;
       })
-      .addCase(createTasks.fulfilled, (state, action: PayloadAction<CreateTasksPayload>) => {
+      .addCase(createTasks.fulfilled, (state, action) => {
         state.tasksData[action.payload.todoListId] = [
           ...state.tasksData[action.payload.todoListId],
           action.payload.item,
         ];
       })
-      .addCase(changeTask.fulfilled, (state, action: PayloadAction<ChangeTaskPayload>) => {
+      .addCase(changeTask.fulfilled, (state, action) => {
         const index = state.tasksData[action.payload.todoListId].findIndex((task) => task.id === action.payload.taskId);
         state.tasksData[action.payload.todoListId].splice(index, 1, action.payload.item);
       })
@@ -104,6 +101,10 @@ const slice = createSlice({
       })
       .addCase(todoListsThunks.deleteTodoList.fulfilled, (state, action) => {
         delete state.tasksData[action.payload.todoListId];
+      })
+      // auth reducers
+      .addCase(authThunks.logout.fulfilled, (state) => {
+        state.tasksData = {};
       });
   },
 });

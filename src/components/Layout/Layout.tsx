@@ -16,6 +16,9 @@ export const Layout = () => {
         navigate("/todo-lists");
       });
   }, []);
+  const logout = () => {
+    dispatch(authThunks.logout({}));
+  };
   return (
     <div className="">
       <AppBar position="static">
@@ -24,7 +27,9 @@ export const Layout = () => {
             <Menu />
           </IconButton>
           <Typography variant="h6">News</Typography>
-          <Button color="inherit">Login</Button>
+          <Button color="inherit" onClick={logout}>
+            Logout
+          </Button>
         </Toolbar>
       </AppBar>
       <Container fixed>
