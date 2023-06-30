@@ -8,7 +8,6 @@ import {
 } from "./todoLists.api";
 import { createAppAsyncThunk } from "../../common/utilis/create-app-async-thunk";
 import { thunkTryCatch } from "../../common/utilis/thunk-try-catch";
-import { tasksActions } from "../tasks/tasks.slice";
 
 enum THUNK_PREFIXES {
   TODO_LISTS = "todo-lists",
@@ -24,9 +23,6 @@ const getTodoLists = createAppAsyncThunk<GetTodoListsPayload>(THUNK_PREFIXES.GET
   return thunkTryCatch(thunkApi, async () => {
     const res = await todoListAPI.getTodoLists();
     const todoLists = res.data;
-    todoLists.forEach((tl) => {
-      thunkApi.dispatch(tasksActions.inzializedTask({ toddoListId: tl.id }));
-    });
     return { todoLists };
   });
 });
@@ -60,7 +56,6 @@ const deleteTodoList = createAppAsyncThunk<DeleteTodoListPayload, DeleteTodoList
   async (args, thunkApi) => {
     return thunkTryCatch(thunkApi, async () => {
       const res = await todoListAPI.deleteTodoList(args);
-      thunkApi.dispatch(tasksActions.deleteTodoList({ todoListId: args.todoListId }));
       return args;
     });
   }

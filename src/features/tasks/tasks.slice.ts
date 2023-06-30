@@ -3,6 +3,7 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { createAppAsyncThunk } from "../../common/utilis/create-app-async-thunk";
 import { thunkTryCatch } from "../../common/utilis/thunk-try-catch";
 import { ChangeTaskArgs, DeleteTaskArgs, TaskType, tasksAPI } from "./tasks.api";
+import { todoListsThunks } from "../todoLists/todoLists.slice";
 
 enum THUNK_PREFIXES {
   TASKS = "tasks",
@@ -72,14 +73,7 @@ const slice = createSlice({
   initialState: {
     tasksData: {} as { [key: string]: TaskType[] },
   },
-  reducers: {
-    inzializedTask(state, action: PayloadAction<{ toddoListId: string }>) {
-      state.tasksData[action.payload.toddoListId] = [];
-    },
-    deleteTodoList(state, action: PayloadAction<{ todoListId: string }>) {
-      delete state.tasksData[action.payload.todoListId];
-    },
-  },
+  reducers: {},
   extraReducers(builder) {
     builder
       .addCase(getTasks.fulfilled, (state, action: PayloadAction<GetTasksPayload>) => {
@@ -95,9 +89,21 @@ const slice = createSlice({
         const index = state.tasksData[action.payload.todoListId].findIndex((task) => task.id === action.payload.taskId);
         state.tasksData[action.payload.todoListId].splice(index, 1, action.payload.item);
       })
-      .addCase(deleteTask.fulfilled, (state, action: PayloadAction<DeleteTaskPaylaod>) => {
+      .addCase(deleteTask.fulfilled, (state, action) => {
         const index = state.tasksData[action.payload.todoListId].findIndex((task) => task.id === action.payload.taskId);
         state.tasksData[action.payload.todoListId].splice(index, 1);
+      })
+      // todo lists reducers
+      .addCase(todoListsThunks.getTodoLists.fulfilled, (state, action) => {
+        action.payload.todoLists.forEach((tl) => {
+          state.tasksData[tl.id] = [];
+        });
+      })
+      .addCase(todoListsThunks.createTodoList.fulfilled, (state, action) => {
+        state.tasksData[action.payload.item.id] = [];
+      })
+      .addCase(todoListsThunks.deleteTodoList.fulfilled, (state, action) => {
+        delete state.tasksData[action.payload.todoListId];
       });
   },
 });
