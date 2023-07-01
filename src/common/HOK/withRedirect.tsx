@@ -1,6 +1,7 @@
 import { FC, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppSelector } from "../hooks/storeHooks";
+
+import { useAppSelector } from "../hooks";
 
 export function withRedirect<T>(BaseComponent: FC<T>): FC<T> {
   return (props: any) => {

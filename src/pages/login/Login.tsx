@@ -1,9 +1,10 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { FormGroup, TextField } from "@mui/material";
+import FormGroup from "@mui/material/FormGroup/FormGroup";
+import TextField from "@mui/material/TextField";
 
-import { useAppDispatch } from "../../hooks/storeHooks";
+import { useAppDispatch } from "../../common/hooks";
 
 import { authThunks } from "../../features/auth/auth.slice";
 

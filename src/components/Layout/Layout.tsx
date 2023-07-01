@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 
 import { Outlet, useNavigate } from "react-router-dom";
 
-import { useAppDispatch } from "../../hooks/storeHooks";
+import { useAppDispatch } from "../../common/hooks";
 import { authThunks } from "../../features/auth/auth.slice";
 
 export const Layout = () => {

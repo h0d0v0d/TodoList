@@ -3,7 +3,7 @@ import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
 import { Delete } from "@mui/icons-material";
 
-import { useAppDispatch, useAppSelector } from "../../hooks/storeHooks";
+import { useAppDispatch, useAppSelector } from "../../common/hooks";
 import { tasksThunks } from "../../features/tasks/tasks.slice";
 import { FilterType, todoListsThunks } from "../../features/todoLists/todoLists.slice";
 import { filterTasks } from "../../common/utilis/filterTasks";

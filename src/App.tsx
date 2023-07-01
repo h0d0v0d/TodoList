@@ -3,7 +3,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 
 import { store } from "./app/store";
-import { withRedirect } from "./HOC/withRedirect";
+import { withRedirect } from "./common/HOK";
 
 import { TodoLists } from "./pages/TodoLists/TodoLists";
 import { Login } from "./pages/login/Login";

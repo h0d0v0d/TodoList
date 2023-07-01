@@ -1,11 +1,10 @@
 import React, { useCallback, useEffect } from "react";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import { AppBar, Button, Container, IconButton, LinearProgress, Toolbar, Typography } from "@mui/material";
+import { Button, Container, IconButton, LinearProgress, Toolbar, Typography } from "@mui/material";
 import { Menu } from "@mui/icons-material";
 
-import { useAppDispatch } from "../../hooks/storeHooks";
-import { useAppSelector } from "../../hooks/storeHooks";
+import { useAppDispatch, useAppSelector } from "../../common/hooks";
 import { todoListsThunks } from "../../features/todoLists/todoLists.slice";
 import { authThunks } from "../../features/auth/auth.slice";
 
