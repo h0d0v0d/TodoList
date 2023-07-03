@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 import { createAppAsyncThunk } from "../../common/utilis/create-app-async-thunk";
 import { thunkTryCatch } from "../../common/utilis/thunk-try-catch";
@@ -58,33 +58,48 @@ type DeleteTaskPaylaod = { todoListId: string; taskId: string };
 const deleteTask = createAppAsyncThunk<DeleteTaskPaylaod, DeleteTaskArgs>(
   THUNK_PREFIXES.DELETE_TASK,
   async (args, thunkApi) => {
+    const { todoListId, taskId } = args;
+    thunkApi.dispatch(tasksActions.changeTaskIntityStatus({ todoListId, taskId, entityStatus: "loading" }));
     return thunkTryCatch(thunkApi, async () => {
       const res = await tasksAPI.deleteTask(args);
+      thunkApi.dispatch(tasksActions.changeTaskIntityStatus({ todoListId, taskId, entityStatus: "succeful" }));
       return args;
     });
   }
 );
 
+export type EntityStatus = "loading" | "succeful" | "error" | "idle";
+export type AppTaskType = TaskType & { entityStatus: EntityStatus };
 const slice = createSlice({
   name: THUNK_PREFIXES.TASKS,
   initialState: {
-    tasksData: {} as { [key: string]: TaskType[] },
+    tasksData: {} as { [key: string]: AppTaskType[] },
   },
-  reducers: {},
+  reducers: {
+    changeTaskIntityStatus(
+      state,
+      action: PayloadAction<{ todoListId: string; taskId: string; entityStatus: EntityStatus }>
+    ) {
+      const { todoListId, taskId, entityStatus } = action.payload;
+      const index = state.tasksData[todoListId].findIndex((task) => (task.id = taskId));
+      state.tasksData[todoListId][index].entityStatus = entityStatus;
+    },
+  },
   extraReducers(builder) {
     builder
       .addCase(getTasks.fulfilled, (state, action) => {
-        state.tasksData[action.payload.todoListId] = action.payload.tasks;
+        const tasks: AppTaskType[] = action.payload.tasks.map((t) => ({ ...t, entityStatus: "idle" }));
+        state.tasksData[action.payload.todoListId] = tasks;
       })
       .addCase(createTasks.fulfilled, (state, action) => {
         state.tasksData[action.payload.todoListId] = [
           ...state.tasksData[action.payload.todoListId],
-          action.payload.item,
+          { ...action.payload.item, entityStatus: "idle" },
         ];
       })
       .addCase(changeTask.fulfilled, (state, action) => {
         const index = state.tasksData[action.payload.todoListId].findIndex((task) => task.id === action.payload.taskId);
-        state.tasksData[action.payload.todoListId].splice(index, 1, action.payload.item);
+        state.tasksData[action.payload.todoListId].splice(index, 1, { ...action.payload.item, entityStatus: "idle" });
       })
       .addCase(deleteTask.fulfilled, (state, action) => {
         const index = state.tasksData[action.payload.todoListId].findIndex((task) => task.id === action.payload.taskId);

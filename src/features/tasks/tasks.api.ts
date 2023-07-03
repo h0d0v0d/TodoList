@@ -15,27 +15,11 @@ export const tasksAPI = {
     });
   },
   changeTask({ todoListId, taskId, ...restArgs }: ChangeTaskArgs) {
-    return instance.put<CreateOrUpdateTaskResponse>(
-      `${todoListId}/tasks/${taskId}`,
-      restArgs
-    );
+    return instance.put<CreateOrUpdateTaskResponse>(`${todoListId}/tasks/${taskId}`, restArgs);
   },
   deleteTask({ todoListId, taskId }: DeleteTaskArgs) {
     return instance.delete<DeleteTaskResponse>(`${todoListId}/tasks/${taskId}`);
   },
-  /* changeTaskTitle({ todoListId, taskId, title }: ChangeTaskTitleArgs) {
-    return instance.put<CreateOrUpdateTaskResponse>(
-      `${todoListId}/tasks/${taskId}`,
-      { title }
-    );
-  },
-  changeTaskStatus(args: ChangeTeaskStatusArgs) {
-    const { todoListId, taskId, title, status } = args;
-    return instance.put<CreateOrUpdateTaskResponse>(
-      `${todoListId}/tasks/${taskId}`,
-      { title, status }
-    );
-  }, */
 };
 
 export type TaskType = {

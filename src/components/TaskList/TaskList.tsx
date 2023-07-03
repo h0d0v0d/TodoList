@@ -2,17 +2,18 @@ import React from "react";
 
 import { Task } from "./Task/Task";
 
-import { TaskType } from "../../features/tasks/tasks.api";
+import { AppTaskType } from "../../features/tasks/tasks.slice";
 
 type TaskListProps = {
-  filteredTasks: TaskType[];
+  tasks: AppTaskType[];
   todoListId: string;
 };
 
-export const TaskList: React.FC<TaskListProps> = ({ filteredTasks, todoListId }) => {
+export const TaskList: React.FC<TaskListProps> = ({ tasks, todoListId }) => {
+  console.log("taskList");
   return (
     <div>
-      {filteredTasks.map((t) => (
+      {tasks.map((t) => (
         <Task key={t.id} task={t} todoListId={todoListId} />
       ))}
     </div>

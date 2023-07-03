@@ -4,14 +4,15 @@ import IconButton from "@mui/material/IconButton";
 import Checkbox from "@mui/material/Checkbox";
 
 import { useAppDispatch } from "../../../common/hooks";
-import { tasksThunks } from "../../../features/tasks/tasks.slice";
+import { AppTaskType, tasksThunks } from "../../../features/tasks/tasks.slice";
 
 import { EditableSpan } from "../../EditableSpan/EditableSpan";
 
 import { TaskType } from "../../../features/tasks/tasks.api";
 
-type TaskPropsType = { task: TaskType; todoListId: string };
+type TaskPropsType = { task: AppTaskType; todoListId: string };
 export const Task: React.FC<TaskPropsType> = React.memo(({ todoListId, task }) => {
+  console.log("task");
   const dispatch = useAppDispatch();
 
   const deleteTask = useCallback(() => {
@@ -54,7 +55,7 @@ export const Task: React.FC<TaskPropsType> = React.memo(({ todoListId, task }) =
     <div key={task.id} className={true ? "is-done" : ""}>
       <Checkbox checked={!!task.status} color="primary" onChange={onChangeHandler} />
       <EditableSpan value={task.title} onChange={changeTaskTitle} />
-      <IconButton onClick={deleteTask}>
+      <IconButton onClick={deleteTask} disabled={task.entityStatus === "loading"}>
         <Delete />
       </IconButton>
     </div>
