@@ -2,10 +2,11 @@ import { FC, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useAppSelector } from "../hooks";
+import { selectIsLoggedIn } from "../../features/auth/auth.selectors";
 
 export function withRedirect<T>(BaseComponent: FC<T>): FC<T> {
   return (props: any) => {
-    const isAuth = useAppSelector((state) => state.auth.isLoggedIn);
+    const isAuth = useAppSelector(selectIsLoggedIn);
     const navigate = useNavigate();
     useEffect(() => {
       if (isAuth === null) return;
