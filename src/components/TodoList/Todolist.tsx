@@ -5,22 +5,22 @@ import { Delete } from "@mui/icons-material";
 
 import { useAppDispatch, useAppSelector } from "../../common/hooks";
 import { tasksThunks } from "../../features/tasks/tasks.slice";
-import { FilterType, todoListsThunks } from "../../features/todoLists/todoLists.slice";
+import { AppTodoListType, FilterType, todoListsThunks } from "../../features/todoLists/todoLists.slice";
 import { filterTasks } from "../../common/utilis/filterTasks";
+import { useTodoListByIdSelector } from "../../common/selectors/useTodoListByIdSelector";
 
 import { AddItemForm } from "../AddItemForm/AddItemForm";
 import { EditableSpan } from "../EditableSpan/EditableSpan";
-import { Task } from "../Task/Task";
 
 import { TaskType } from "../../features/tasks/tasks.api";
+import { TaskList } from "../TaskList/TaskList";
 
 type PropsType = {
   todoListId: string;
-  title: string;
-  filter: FilterType;
 };
 
-export const Todolist: React.FC<PropsType> = React.memo(({ todoListId, title, filter }) => {
+export const Todolist: React.FC<PropsType> = React.memo(({ todoListId }) => {
+  const { title, filter }: AppTodoListType = useTodoListByIdSelector(todoListId);
   const tasks: TaskType[] = useAppSelector((state) => state.tasks.tasksData[todoListId]);
   const dispatch = useAppDispatch();
 
@@ -66,11 +66,7 @@ export const Todolist: React.FC<PropsType> = React.memo(({ todoListId, title, fi
         </IconButton>
       </h3>
       <AddItemForm addItem={addTask} />
-      <div>
-        {filteredTasks.map((t) => (
-          <Task key={t.id} task={t} todoListId={todoListId} />
-        ))}
-      </div>
+      <TaskList filteredTasks={filteredTasks} todoListId={todoListId} />
       <div style={{ paddingTop: "10px" }}>
         <Button
           variant={filter === "all" ? "outlined" : "text"}

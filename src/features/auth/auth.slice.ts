@@ -59,6 +59,9 @@ const slice = createSlice({
         state.isLoggedIn = action.payload.isLoggedIn;
         state.user = action.payload.user;
       })
+      .addCase(me.rejected, (state, action) => {
+        state.isLoggedIn = false;
+      })
       .addCase(login.fulfilled, (state, action: PayloadAction<LoginPayload>) => {
         state.user.userId = action.payload.userId;
         state.isLoggedIn = action.payload.isLoggedIn;

@@ -54,7 +54,7 @@ export const TodoLists = () => {
             return (
               <Grid item key={tl.id}>
                 <Paper style={{ padding: "10px" }}>
-                  <Todolist todoListId={tl.id} title={tl.title} filter={tl.filter} />
+                  <Todolist todoListId={tl.id} />
                 </Paper>
               </Grid>
             );

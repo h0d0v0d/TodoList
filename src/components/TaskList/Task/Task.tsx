@@ -3,12 +3,12 @@ import { Delete } from "@mui/icons-material";
 import IconButton from "@mui/material/IconButton";
 import Checkbox from "@mui/material/Checkbox";
 
-import { useAppDispatch } from "../../common/hooks";
-import { tasksThunks } from "../../features/tasks/tasks.slice";
+import { useAppDispatch } from "../../../common/hooks";
+import { tasksThunks } from "../../../features/tasks/tasks.slice";
 
-import { EditableSpan } from "../EditableSpan/EditableSpan";
+import { EditableSpan } from "../../EditableSpan/EditableSpan";
 
-import { TaskType } from "../../features/tasks/tasks.api";
+import { TaskType } from "../../../features/tasks/tasks.api";
 
 type TaskPropsType = { task: TaskType; todoListId: string };
 export const Task: React.FC<TaskPropsType> = React.memo(({ todoListId, task }) => {

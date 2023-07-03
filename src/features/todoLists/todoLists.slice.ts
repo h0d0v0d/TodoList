@@ -71,7 +71,7 @@ const changeFilter = createAppAsyncThunk<ChangeFilterPayload, ChangeFilterArgs>(
 );
 
 export type FilterType = "all" | "active" | "completed";
-type AppTodoListType = TodoListType & {
+export type AppTodoListType = TodoListType & {
   filter: FilterType;
 };
 const slice = createSlice({
