@@ -7,7 +7,8 @@ import { useAppDispatch, useAppSelector } from "../../common/hooks";
 import { tasksThunks } from "../../features/tasks/tasks.slice";
 import { AppTodoListType, FilterType, todoListsThunks } from "../../features/todoLists/todoLists.slice";
 import { filterTasks } from "../../common/utilis/filterTasks";
-import { useTodoListByIdSelector } from "../../common/selectors/useTodoListByIdSelector";
+import { selectTodoListById } from "../../features/todoLists/todoLists.selectors";
+import { selectFilteredTasksById } from "../../features/tasks/tasks.selectors";
 
 import { AddItemForm } from "../AddItemForm/AddItemForm";
 import { EditableSpan } from "../EditableSpan/EditableSpan";
@@ -20,8 +21,11 @@ type PropsType = {
 };
 
 export const Todolist: React.FC<PropsType> = React.memo(({ todoListId }) => {
-  const { title, filter }: AppTodoListType = useTodoListByIdSelector(todoListId);
-  const tasks: TaskType[] = useAppSelector((state) => state.tasks.tasksData[todoListId]);
+  //const { title, filter }: AppTodoListType = useTodoListByIdSelector(todoListId);
+  const { title, filter } = useAppSelector((state) => selectTodoListById(state, todoListId));
+  //const tasks: TaskType[] = useAppSelector((state) => state.tasks.tasksData[todoListId]);
+  // const tasks = useAppSelector((state) => selectTasksById(state, todoListId));
+  const tasks = useAppSelector((state) => selectFilteredTasksById(state, { todoListId, filter }));
   const dispatch = useAppDispatch();
 
   const addTask = useCallback(
@@ -66,7 +70,7 @@ export const Todolist: React.FC<PropsType> = React.memo(({ todoListId }) => {
         </IconButton>
       </h3>
       <AddItemForm addItem={addTask} />
-      <TaskList filteredTasks={filteredTasks} todoListId={todoListId} />
+      <TaskList filteredTasks={tasks} todoListId={todoListId} />
       <div style={{ paddingTop: "10px" }}>
         <Button
           variant={filter === "all" ? "outlined" : "text"}

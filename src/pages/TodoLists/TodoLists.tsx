@@ -7,13 +7,15 @@ import { Menu } from "@mui/icons-material";
 import { useAppDispatch, useAppSelector } from "../../common/hooks";
 import { todoListsThunks } from "../../features/todoLists/todoLists.slice";
 import { authThunks } from "../../features/auth/auth.slice";
+import { selectTodoListsData } from "../../features/todoLists/todoLists.selectors";
+import { selectAppLoading } from "../../app/app.selectors";
 
 import { Todolist } from "../../components/TodoList/Todolist";
 import { AddItemForm } from "../../components/AddItemForm/AddItemForm";
 
 export const TodoLists = () => {
-  const todolists = useAppSelector((state) => state.todoLists.todoListsData);
-  const globalLoading = useAppSelector((state) => state.app.globalLoading);
+  const todolists = useAppSelector(selectTodoListsData);
+  const globalLoading = useAppSelector(selectAppLoading);
   const dispatch = useAppDispatch();
 
   const addTodolist = useCallback(
