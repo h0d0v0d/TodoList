@@ -59,7 +59,7 @@ export const Task: React.FC<TaskPropsType> = React.memo(({ todoListId, task }) =
       />
       <EditableSpan value={task.title} onChange={changeTaskTitle} disabled={task.entityStatus === "loading"} />
       <IconButton onClick={deleteTask} disabled={task.entityStatus === "loading"}>
-        <Delete />
+        <Delete sx={{ color: "#DC143C" }} />
       </IconButton>
     </div>
   );

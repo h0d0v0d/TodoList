@@ -47,7 +47,13 @@ export const AddItemForm: React.FC<AddItemFormPropsType> = React.memo(({ addItem
         helperText={error}
       />
       <IconButton color="primary" onClick={addItemHandler}>
-        <AddBox />
+        <AddBox
+          sx={{
+            height: "43px",
+            width: "43px",
+            color: "#228B22",
+          }}
+        />
       </IconButton>
     </div>
   );

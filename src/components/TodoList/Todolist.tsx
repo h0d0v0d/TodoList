@@ -59,7 +59,11 @@ export const Todolist: React.FC<PropsType> = React.memo(({ todoListId }) => {
           <h3>
             <EditableSpan value={title} onChange={changeTodolistTitleHandler} />
             <IconButton onClick={deleteTodoList}>
-              <Delete />
+              <Delete
+                sx={{
+                  color: "#DC143C",
+                }}
+              />
             </IconButton>
           </h3>
           <AddItemForm addItem={addTask} />
