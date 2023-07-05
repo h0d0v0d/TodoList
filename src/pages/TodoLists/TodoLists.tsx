@@ -33,8 +33,8 @@ export const TodoLists = () => {
   }, []);
 
   return (
-    <>
-      <div style={{ backgroundColor: "orange" }}>
+    <div style={{ margin: 0, padding: 0 }}>
+      <div style={{ backgroundColor: "#1976d2" }}>
         <Toolbar>
           <IconButton edge="start" color="inherit" aria-label="menu">
             <Menu />
@@ -55,6 +55,6 @@ export const TodoLists = () => {
           })}
         </Grid>
       </Container>
-    </>
+    </div>
   );
 };

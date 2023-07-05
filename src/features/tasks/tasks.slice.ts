@@ -47,6 +47,7 @@ const changeTask = createAppAsyncThunk<ChangeTaskPayload, ChangeTaskArgs>(
   async (args, thunkApi) => {
     return thunkTryCatch(thunkApi, async () => {
       const { todoListId, taskId } = args;
+      thunkApi.dispatch(tasksActions.changeTaskIntityStatus({ todoListId, taskId, entityStatus: "loading" }));
       const res = await tasksAPI.changeTask(args);
       const item = res.data.data.item;
       return { todoListId, taskId, item };
@@ -81,7 +82,7 @@ const slice = createSlice({
       action: PayloadAction<{ todoListId: string; taskId: string; entityStatus: EntityStatus }>
     ) {
       const { todoListId, taskId, entityStatus } = action.payload;
-      const index = state.tasksData[todoListId].findIndex((task) => (task.id = taskId));
+      const index = state.tasksData[todoListId].findIndex((task) => task.id === taskId);
       state.tasksData[todoListId][index].entityStatus = entityStatus;
     },
   },

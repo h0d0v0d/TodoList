@@ -8,8 +8,6 @@ import { AppTaskType, tasksThunks } from "../../../features/tasks/tasks.slice";
 
 import { EditableSpan } from "../../EditableSpan/EditableSpan";
 
-import { TaskType } from "../../../features/tasks/tasks.api";
-
 type TaskPropsType = { task: AppTaskType; todoListId: string };
 export const Task: React.FC<TaskPropsType> = React.memo(({ todoListId, task }) => {
   console.log("task");
@@ -53,8 +51,13 @@ export const Task: React.FC<TaskPropsType> = React.memo(({ todoListId, task }) =
 
   return (
     <div key={task.id} className={true ? "is-done" : ""}>
-      <Checkbox checked={!!task.status} color="primary" onChange={onChangeHandler} />
-      <EditableSpan value={task.title} onChange={changeTaskTitle} />
+      <Checkbox
+        checked={!!task.status}
+        color="primary"
+        onChange={onChangeHandler}
+        disabled={task.entityStatus === "loading"}
+      />
+      <EditableSpan value={task.title} onChange={changeTaskTitle} disabled={task.entityStatus === "loading"} />
       <IconButton onClick={deleteTask} disabled={task.entityStatus === "loading"}>
         <Delete />
       </IconButton>
