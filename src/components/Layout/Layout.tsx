@@ -5,11 +5,11 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../common/hooks";
 import { authThunks } from "../../features/auth/auth.slice";
 import { LinearProgress } from "@mui/material";
-import { selectAppLoading } from "../../app/app.selectors";
+import { appSelectors } from "../../app/app.selectors";
 
 export const Layout = () => {
   const navigate = useNavigate();
-  const globalLoading = useAppSelector(selectAppLoading);
+  const globalLoading = useAppSelector(appSelectors.loading);
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(authThunks.me({}))

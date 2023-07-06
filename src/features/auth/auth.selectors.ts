@@ -1,4 +1,6 @@
 import { RootState } from "../../app/store";
 
-export const selectIsLoggedIn = (state: RootState) => state.auth.isLoggedIn;
-export const selectUser = (state: RootState) => state.auth.user;
+export const authSelectors = {
+  isLoggedIn: (state: RootState) => state.auth.isLoggedIn,
+  user: (state: RootState) => state.auth.user,
+};

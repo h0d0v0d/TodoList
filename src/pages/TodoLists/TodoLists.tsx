@@ -1,8 +1,6 @@
 import React, { useCallback, useEffect } from "react";
 import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
-import { Button, Container, IconButton, LinearProgress, Toolbar, Typography } from "@mui/material";
-import { Menu } from "@mui/icons-material";
+import { Button, Container, Toolbar } from "@mui/material";
 
 import { useAppDispatch, useAppSelector } from "../../common/hooks";
 import { todoListsThunks } from "../../features/todoLists/todoLists.slice";
@@ -11,10 +9,12 @@ import { selectTodoListsData } from "../../features/todoLists/todoLists.selector
 
 import { Todolist } from "../../components/TodoList/Todolist";
 import { AddItemForm } from "../../components/AddItemForm/AddItemForm";
+import { authSelectors } from "../../features/auth/auth.selectors";
 
 export const TodoLists = () => {
   console.log("list todo");
   const todolists = useAppSelector(selectTodoListsData);
+  const user = useAppSelector(authSelectors.user);
   const dispatch = useAppDispatch();
 
   const addTodolist = useCallback(
@@ -35,13 +35,13 @@ export const TodoLists = () => {
   return (
     <div>
       <div style={{ backgroundColor: "#1976d2" }}>
-        <Toolbar>
-          <IconButton edge="start" color="inherit" aria-label="menu">
-            <Menu />
-          </IconButton>
+        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
           <Button color="inherit" onClick={logout}>
             Logout
           </Button>
+          <div className="user-info">
+            <h2>{user.login}</h2>
+          </div>
         </Toolbar>
       </div>
       <Container fixed>
