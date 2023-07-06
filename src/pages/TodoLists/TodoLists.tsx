@@ -33,13 +33,12 @@ export const TodoLists = () => {
   }, []);
 
   return (
-    <div style={{ margin: 0, padding: 0 }}>
+    <div>
       <div style={{ backgroundColor: "#1976d2" }}>
         <Toolbar>
           <IconButton edge="start" color="inherit" aria-label="menu">
             <Menu />
           </IconButton>
-          <Typography variant="h6">News</Typography>
           <Button color="inherit" onClick={logout}>
             Logout
           </Button>

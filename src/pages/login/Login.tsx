@@ -8,6 +8,9 @@ import { useAppDispatch } from "../../common/hooks";
 
 import { authThunks } from "../../features/auth/auth.slice";
 
+import "./login.css";
+import { emailValidate, passwordValidate } from "../../common/utilis/validate";
+
 export const Login = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -34,31 +37,36 @@ export const Login = () => {
   };
   return (
     <div className="login-page">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <FormGroup>
-          <TextField
-            error={!!errors.email?.message}
-            margin="dense"
-            variant="standard"
-            label={"Email"}
-            helperText={errors.email?.message || " "}
-            {...register("email")}
-          />
-          <TextField
-            error={!!errors.password?.message}
-            margin="dense"
-            variant="standard"
-            label="Password"
-            type="password"
-            helperText={errors.password?.message || " "}
-            {...register("password")}
-          />
+      <div className="login-form">
+        <div className="login-form-header">
+          <h2>Log in</h2>
+        </div>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <FormGroup>
+            <TextField
+              error={!!errors.email?.message}
+              margin="dense"
+              variant="standard"
+              label={"Email"}
+              helperText={errors.email?.message || " "}
+              {...register("email", { validate: emailValidate })}
+            />
+            <TextField
+              error={!!errors.password?.message}
+              margin="dense"
+              variant="standard"
+              label="Password"
+              type="password"
+              helperText={errors.password?.message || " "}
+              {...register("password", { validate: passwordValidate })}
+            />
 
-          <button type="submit" disabled={!isValid}>
-            Sign in
-          </button>
-        </FormGroup>
-      </form>
+            <button type="submit" disabled={!isValid}>
+              Sign in
+            </button>
+          </FormGroup>
+        </form>
+      </div>
     </div>
   );
 };
