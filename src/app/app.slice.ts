@@ -3,6 +3,7 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 export const RESULT_CODE = {
   OK: 0,
   ERROR: 1,
+  CAPTCHA: 10,
 };
 
 const THUNK_PREFIXES = {

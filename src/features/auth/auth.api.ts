@@ -7,10 +7,10 @@ const instance = axios.create({
 
 export const authAPI = {
   me() {
-    return instance.get<MeResponse>("auth/me");
+    return instance.get<ResponseType<User>>("auth/me");
   },
   login(args: LoginArgs) {
-    return instance.post<LoginResponse>("auth/login", args);
+    return instance.post<ResponseType<{ userId: number }>>("auth/login", args);
   },
   logout() {
     return instance.delete("auth/login");
@@ -23,12 +23,16 @@ export type User = {
   login: string;
 };
 
-// Me
-type MeResponse = {
-  resultCode: number;
+type FieldError = {
+  error: string;
+  field: string;
+};
+
+export type ResponseType<T> = {
+  data: T;
   messages: string[];
-  fieldsErrors: string[];
-  data: User;
+  fieldsErrors: FieldError[];
+  resultCode: number;
 };
 
 // Login
@@ -37,13 +41,4 @@ export type LoginArgs = {
   password: string;
   rememberMe?: boolean;
   captcha?: boolean;
-};
-
-// LoginResponse
-
-type LoginResponse = {
-  data: { userId: number };
-  messages: string[];
-  fieldsErrors: string[];
-  resultCode: number;
 };
