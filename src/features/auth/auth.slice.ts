@@ -30,7 +30,11 @@ const login = createAppAsyncThunk<LoginPayload, LoginArgs>(THUNK_PREFIXES.LOGIN,
       email: args.email,
       password: args.password,
     });
-    return { isLoggedIn: true, userId: res.data.data.userId };
+    if (res.data.resultCode === 0) {
+      return { isLoggedIn: true, userId: res.data.data.userId };
+    } else {
+      return thunkApi.rejectWithValue({ value: "error" });
+    }
   });
 });
 

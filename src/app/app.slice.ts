@@ -1,4 +1,9 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+
+export const RESULT_CODE = {
+  OK: 0,
+  ERROR: 1,
+};
 
 const THUNK_PREFIXES = {
   APP: "app",
@@ -10,7 +15,14 @@ const slice = createSlice({
     error: null as string | null,
     globalLoading: true,
   },
-  reducers: {},
+  reducers: {
+    setAppError(state, action: PayloadAction<{ error: string }>) {
+      state.error = action.payload.error;
+    },
+    setAppLoading(state, action: PayloadAction<{ loading: boolean }>) {
+      state.globalLoading = action.payload.loading;
+    },
+  },
   extraReducers(builder) {
     builder
       .addMatcher(
