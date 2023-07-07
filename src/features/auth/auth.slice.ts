@@ -3,6 +3,7 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { LoginArgs, User, authAPI } from "./auth.api";
 import { createAppAsyncThunk } from "../../common/utilis/create-app-async-thunk";
 import { thunkTryCatch } from "../../common/utilis/thunk-try-catch";
+import { handleServerAppError } from "../../common/utilis/server-error";
 
 const THUNK_PREFIXES = {
   AUTH: "auth",
@@ -18,6 +19,7 @@ const me = createAppAsyncThunk<MePayload, {}>(THUNK_PREFIXES.ME, async (args, th
     if (res.data.resultCode === 0) {
       return { isLoggedIn: true, user: res.data.data };
     } else {
+      handleServerAppError(res.data, thunkApi.dispatch);
       return thunkApi.rejectWithValue({ value: "error" });
     }
   });
