@@ -20,10 +20,10 @@ type PropsType = {
 };
 
 export const Todolist: React.FC<PropsType> = React.memo(({ todoListId }) => {
-  const { createTasks, getTasks } = useActions(tasksThunks);
-  const { deleteTodoList, changeTodoListTitle, changeFilter } = useActions(todoListsThunks);
   const { title, filter } = useAppSelector((state) => selectTodoListById(state, todoListId));
   const filteredTasks = useAppSelector((state) => selectFilteredTasksById(state, { todoListId, filter }));
+  const { createTasks, getTasks } = useActions(tasksThunks);
+  const { deleteTodoList, changeTodoListTitle, changeFilter } = useActions(todoListsThunks);
   const dispatch = useAppDispatch();
 
   const addTask = useCallback(

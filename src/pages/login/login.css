@@ -1,6 +1,6 @@
 .login-page{
+    height: 90vh;
     display: flex;
-    padding-top: 80px;
     justify-content: center;
     align-items: center;
 }

@@ -3,48 +3,35 @@ import { Delete } from "@mui/icons-material";
 import IconButton from "@mui/material/IconButton";
 import Checkbox from "@mui/material/Checkbox";
 
-import { useAppDispatch } from "../../../common/hooks";
+import { useActions, useAppDispatch } from "../../../common/hooks";
 import { AppTaskType, tasksThunks } from "../../../features/tasks/tasks.slice";
 
 import { EditableSpan } from "../../EditableSpan/EditableSpan";
 
 type TaskPropsType = { task: AppTaskType; todoListId: string };
 export const Task: React.FC<TaskPropsType> = React.memo(({ todoListId, task }) => {
-  console.log("task");
+  const { deleteTask, changeTask } = useActions(tasksThunks);
   const dispatch = useAppDispatch();
 
-  const deleteTask = useCallback(() => {
-    dispatch(
-      tasksThunks.deleteTask({
-        todoListId,
-        taskId: task.id,
-      })
-    );
+  const deleteTaskHandler = useCallback(() => {
+    deleteTask({ todoListId, taskId: task.id });
   }, [dispatch]);
 
-  const onChangeHandler = useCallback(
+  const changeTaskHandler = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      dispatch(
-        tasksThunks.changeTask({
-          todoListId,
-          taskId: task.id,
-          title: task.title,
-          status: Number(e.currentTarget.checked),
-        })
-      );
+      changeTask({
+        todoListId,
+        taskId: task.id,
+        title: task.title,
+        status: Number(e.currentTarget.checked),
+      });
     },
     [dispatch]
   );
 
   const changeTaskTitle = useCallback(
-    (newValue: string) => {
-      dispatch(
-        tasksThunks.changeTask({
-          todoListId,
-          taskId: task.id,
-          title: newValue,
-        })
-      );
+    (title: string) => {
+      changeTask({ todoListId, taskId: task.id, title });
     },
     [dispatch]
   );
@@ -54,11 +41,11 @@ export const Task: React.FC<TaskPropsType> = React.memo(({ todoListId, task }) =
       <Checkbox
         checked={!!task.status}
         color="primary"
-        onChange={onChangeHandler}
+        onChange={changeTaskHandler}
         disabled={task.entityStatus === "loading"}
       />
       <EditableSpan value={task.title} onChange={changeTaskTitle} disabled={task.entityStatus === "loading"} />
-      <IconButton onClick={deleteTask} disabled={task.entityStatus === "loading"}>
+      <IconButton onClick={deleteTaskHandler} disabled={task.entityStatus === "loading"}>
         <Delete sx={{ color: "#DC143C" }} />
       </IconButton>
     </div>

@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from "react";
 import Grid from "@mui/material/Grid";
 import { Button, Container, Toolbar } from "@mui/material";
 
-import { useAppDispatch, useAppSelector } from "../../common/hooks";
+import { useActions, useAppDispatch, useAppSelector } from "../../common/hooks";
 import { todoListsThunks } from "../../features/todoLists/todoLists.slice";
 import { authThunks } from "../../features/auth/auth.slice";
 import { selectTodoListsData } from "../../features/todoLists/todoLists.selectors";
@@ -12,31 +12,31 @@ import { AddItemForm } from "../../components/AddItemForm/AddItemForm";
 import { authSelectors } from "../../features/auth/auth.selectors";
 
 export const TodoLists = () => {
-  console.log("list todo");
   const todolists = useAppSelector(selectTodoListsData);
   const user = useAppSelector(authSelectors.user);
+  const { createTodoList, logout, getTodoLists } = useActions({ ...authThunks, ...todoListsThunks });
   const dispatch = useAppDispatch();
 
   const addTodolist = useCallback(
     (title: string) => {
-      dispatch(todoListsThunks.createTodoList({ title }));
+      createTodoList({ title });
     },
     [dispatch]
   );
 
-  const logout = () => {
-    dispatch(authThunks.logout({}));
+  const logoutHandler = () => {
+    logout();
   };
 
   useEffect(() => {
-    dispatch(todoListsThunks.getTodoLists());
+    getTodoLists();
   }, []);
 
   return (
     <div>
       <div style={{ backgroundColor: "#1976d2" }}>
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Button color="inherit" onClick={logout}>
+          <Button color="inherit" onClick={logoutHandler}>
             Logout
           </Button>
           <div className="user-info">

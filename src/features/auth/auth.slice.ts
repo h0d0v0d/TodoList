@@ -3,8 +3,9 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { LoginArgs, User, authAPI } from "./auth.api";
 import { createAppAsyncThunk } from "../../common/utilis/create-app-async-thunk";
 import { thunkTryCatch } from "../../common/utilis/thunk-try-catch";
-import { appActions } from "../../app/app.slice";
+import { RESULT_CODE } from "../../app/app.slice";
 import { getErorMessage } from "../../common/utilis/getErrorMessage";
+import { toast } from "react-toastify";
 
 const THUNK_PREFIXES = {
   AUTH: "auth",
@@ -18,8 +19,9 @@ const me = createAppAsyncThunk<MePayload, {}>(THUNK_PREFIXES.ME, async (args, th
   return thunkTryCatch(
     thunkApi,
     async () => {
+      toast.error("505");
       const res = await authAPI.me();
-      if (res.data.resultCode === 0) {
+      if (res.data.resultCode === RESULT_CODE.OK) {
         return { isLoggedIn: true, user: res.data.data };
       } else {
         return thunkApi.rejectWithValue(getErorMessage(res.data));
@@ -36,7 +38,7 @@ const login = createAppAsyncThunk<LoginPayload, LoginArgs>(THUNK_PREFIXES.LOGIN,
       email: args.email,
       password: args.password,
     });
-    if (res.data.resultCode === 0) {
+    if (res.data.resultCode === RESULT_CODE.OK) {
       return { isLoggedIn: true, userId: res.data.data.userId };
     } else {
       return thunkApi.rejectWithValue(res.data);
@@ -45,10 +47,13 @@ const login = createAppAsyncThunk<LoginPayload, LoginArgs>(THUNK_PREFIXES.LOGIN,
 });
 
 type LogoutPayload = { isLoggedIn: boolean };
-const logout = createAppAsyncThunk<LogoutPayload, any>(THUNK_PREFIXES.LOGOUT, async (args, thunkApi) => {
+const logout = createAppAsyncThunk<LogoutPayload>(THUNK_PREFIXES.LOGOUT, async (args, thunkApi) => {
   return thunkTryCatch(thunkApi, async () => {
     const res = await authAPI.logout();
-    return { isLoggedIn: false };
+    if (res.data.resultCode === RESULT_CODE.OK) {
+      return { isLoggedIn: false };
+    }
+    return thunkApi.rejectWithValue("e");
   });
 });
 

@@ -7,6 +7,9 @@ import { authThunks } from "../../features/auth/auth.slice";
 import { LinearProgress } from "@mui/material";
 import { appSelectors } from "../../app/app.selectors";
 
+import Toast from "../Toast/Toast";
+import { ToastContainer } from "react-toastify";
+
 export const Layout = () => {
   const navigate = useNavigate();
   const globalLoading = useAppSelector(appSelectors.loading);

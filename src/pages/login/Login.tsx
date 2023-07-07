@@ -5,7 +5,7 @@ import FormGroup from "@mui/material/FormGroup/FormGroup";
 import TextField from "@mui/material/TextField";
 import { ResponseType } from "../../features/auth/auth.api";
 
-import { useAppDispatch } from "../../common/hooks";
+import { useActions, useAppDispatch } from "../../common/hooks";
 
 import { authThunks } from "../../features/auth/auth.slice";
 
@@ -13,7 +13,7 @@ import "./login.css";
 import { emailValidate, passwordValidate } from "../../common/utilis/validate";
 
 export const Login = () => {
-  const dispatch = useAppDispatch();
+  const { login } = useActions(authThunks);
   const navigate = useNavigate();
   const {
     register,
@@ -30,7 +30,7 @@ export const Login = () => {
     mode: "onBlur",
   });
   const onSubmit = (data: { email: string; password: string }) => {
-    dispatch(authThunks.login(data))
+    login(data)
       .unwrap()
       .then(() => {
         navigate("/todo-lists");
@@ -70,7 +70,7 @@ export const Login = () => {
               {...register("password", { validate: passwordValidate })}
             />
 
-            <button type="submit" disabled={false}>
+            <button type="submit" disabled={!isValid}>
               Sign in
             </button>
           </FormGroup>
