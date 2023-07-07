@@ -1,7 +1,9 @@
 import React from "react";
 import { ToastContainer } from "react-toastify";
 
-const Toast = () => {
+import "react-toastify/dist/ReactToastify.css";
+
+export const Toast = () => {
   return (
     <ToastContainer
       position="bottom-left"
@@ -13,9 +15,7 @@ const Toast = () => {
       pauseOnFocusLoss
       draggable
       pauseOnHover
-      theme="dark"
+      theme="colored"
     />
   );
 };
-
-export default Toast;

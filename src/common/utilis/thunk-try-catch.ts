@@ -1,8 +1,7 @@
+import { toast } from "react-toastify";
 import { BaseThunkAPI } from "@reduxjs/toolkit/dist/createAsyncThunk";
 import { AppDispatch, RootState } from "../../app/store";
-import { handleServerError505 } from "./server-error";
-import { toast } from "react-toastify";
-
+import { handleServerError505 } from "./server-error-505";
 type Options = { showGlobalError?: boolean | undefined };
 
 export const thunkTryCatch = async <T>(

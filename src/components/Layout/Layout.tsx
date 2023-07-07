@@ -7,8 +7,7 @@ import { authThunks } from "../../features/auth/auth.slice";
 import { LinearProgress } from "@mui/material";
 import { appSelectors } from "../../app/app.selectors";
 
-import Toast from "../Toast/Toast";
-import { ToastContainer } from "react-toastify";
+import { Toast } from "../Toast/Toast";
 
 export const Layout = () => {
   const navigate = useNavigate();
@@ -28,6 +27,7 @@ export const Layout = () => {
       error
       {error && <h2>{error}</h2>}
       <Outlet />
+      <Toast />
     </div>
   );
 };
