@@ -47,18 +47,17 @@ const slice = createSlice({
           }
           state.globalLoading = false;
         }
-      )
+      ); /* 
       .addMatcher(
         (action: any) => {
           return action.type.endsWith("/rejected");
         },
         (state, action) => {
-          if (state.globalLoading === false) {
-            return;
-          }
           state.globalLoading = false;
+          if (action.showGlobalError === false) return;
+          state.error = action.error;
         }
-      );
+      ); */
   },
 });
 

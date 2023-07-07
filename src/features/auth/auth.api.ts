@@ -28,7 +28,7 @@ type FieldError = {
   field: string;
 };
 
-export type ResponseType<T> = {
+export type ResponseType<T = {}> = {
   data: T;
   messages: string[];
   fieldsErrors: FieldError[];

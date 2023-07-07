@@ -9,6 +9,7 @@ import { tasksThunks } from "../../features/tasks/tasks.slice";
 import { FilterType, todoListsThunks } from "../../features/todoLists/todoLists.slice";
 import { selectTodoListById } from "../../features/todoLists/todoLists.selectors";
 import { selectFilteredTasksById } from "../../features/tasks/tasks.selectors";
+import { useActions } from "../../common/hooks/";
 
 import { AddItemForm } from "../AddItemForm/AddItemForm";
 import { EditableSpan } from "../EditableSpan/EditableSpan";
@@ -19,37 +20,39 @@ type PropsType = {
 };
 
 export const Todolist: React.FC<PropsType> = React.memo(({ todoListId }) => {
+  const { createTasks, getTasks } = useActions(tasksThunks);
+  const { deleteTodoList, changeTodoListTitle, changeFilter } = useActions(todoListsThunks);
   const { title, filter } = useAppSelector((state) => selectTodoListById(state, todoListId));
   const filteredTasks = useAppSelector((state) => selectFilteredTasksById(state, { todoListId, filter }));
   const dispatch = useAppDispatch();
 
   const addTask = useCallback(
     (title: string) => {
-      dispatch(tasksThunks.createTasks({ todoListId, title }));
+      createTasks({ todoListId, title });
     },
     [dispatch, todoListId]
   );
 
-  const deleteTodoList = useCallback(() => {
-    dispatch(todoListsThunks.deleteTodoList({ todoListId }));
+  const deleteTodoListHandler = useCallback(() => {
+    deleteTodoList({ todoListId });
   }, [dispatch, todoListId]);
 
   const changeTodolistTitleHandler = useCallback(
     (title: string) => {
-      dispatch(todoListsThunks.changeTodoListTitle({ todoListId, title }));
+      changeTodoListTitle({ todoListId, title });
     },
     [dispatch, todoListId]
   );
 
   const changeFilterHandler = useCallback(
     (filter: FilterType) => {
-      dispatch(todoListsThunks.changeFilter({ todoListId, filter }));
+      changeFilter({ todoListId, filter });
     },
     [dispatch, todoListId]
   );
 
   useEffect(() => {
-    dispatch(tasksThunks.getTasks({ todoListId }));
+    getTasks({ todoListId });
   }, []);
 
   return (
@@ -58,7 +61,7 @@ export const Todolist: React.FC<PropsType> = React.memo(({ todoListId }) => {
         <div>
           <h3>
             <EditableSpan value={title} onChange={changeTodolistTitleHandler} />
-            <IconButton onClick={deleteTodoList}>
+            <IconButton onClick={deleteTodoListHandler}>
               <Delete
                 sx={{
                   color: "#DC143C",

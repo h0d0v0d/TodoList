@@ -3,7 +3,8 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { LoginArgs, User, authAPI } from "./auth.api";
 import { createAppAsyncThunk } from "../../common/utilis/create-app-async-thunk";
 import { thunkTryCatch } from "../../common/utilis/thunk-try-catch";
-import { handleServerError505 } from "../../common/utilis/server-error";
+import { appActions } from "../../app/app.slice";
+import { getErorMessage } from "../../common/utilis/getErrorMessage";
 
 const THUNK_PREFIXES = {
   AUTH: "auth",
@@ -14,14 +15,18 @@ const THUNK_PREFIXES = {
 
 type MePayload = { isLoggedIn: boolean; user: User };
 const me = createAppAsyncThunk<MePayload, {}>(THUNK_PREFIXES.ME, async (args, thunkApi) => {
-  return thunkTryCatch(thunkApi, async () => {
-    const res = await authAPI.me();
-    if (res.data.resultCode === 0) {
-      return { isLoggedIn: true, user: res.data.data };
-    } else {
-      return thunkApi.rejectWithValue({ value: "error" });
-    }
-  });
+  return thunkTryCatch(
+    thunkApi,
+    async () => {
+      const res = await authAPI.me();
+      if (res.data.resultCode === 0) {
+        return { isLoggedIn: true, user: res.data.data };
+      } else {
+        return thunkApi.rejectWithValue(getErorMessage(res.data));
+      }
+    },
+    { showGlobalError: true }
+  );
 });
 
 type LoginPayload = { isLoggedIn: boolean; userId: number };

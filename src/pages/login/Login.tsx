@@ -15,8 +15,6 @@ import { emailValidate, passwordValidate } from "../../common/utilis/validate";
 export const Login = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const form = useForm({});
-  console.log(form);
   const {
     register,
     handleSubmit,
@@ -37,8 +35,7 @@ export const Login = () => {
       .then(() => {
         navigate("/todo-lists");
       })
-      .catch((reason: ResponseType<{}>) => {
-        console.log(reason.fieldsErrors[0]);
+      .catch((reason: ResponseType) => {
         if (reason.fieldsErrors.length === 0) return;
         reason.fieldsErrors.forEach((r) => {
           // @ts-ignore
@@ -61,7 +58,7 @@ export const Login = () => {
               variant="standard"
               label={"Email"}
               helperText={errors.email?.message || " "}
-              {...register("email" /* { validate: emailValidate } */)}
+              {...register("email", { validate: emailValidate })}
             />
             <TextField
               error={!!errors.password?.message}
@@ -70,7 +67,7 @@ export const Login = () => {
               label="Password"
               type="password"
               helperText={errors.password?.message || " "}
-              {...register("password" /* { validate: passwordValidate } */)}
+              {...register("password", { validate: passwordValidate })}
             />
 
             <button type="submit" disabled={false}>
