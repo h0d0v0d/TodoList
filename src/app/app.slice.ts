@@ -54,6 +54,9 @@ const slice = createSlice({
         },
         (state, action) => {
           state.globalLoading = false;
+          if (action.payload.showGlobalError) {
+            state.error = action.payload.error;
+          }
         }
       );
   },

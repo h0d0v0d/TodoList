@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { LoginArgs, User, authAPI } from "./auth.api";
 import { createAppAsyncThunk } from "../../common/utilis/create-app-async-thunk";
 import { thunkTryCatch } from "../../common/utilis/thunk-try-catch";
-import { RESULT_CODE } from "../../app/app.slice";
+import { RESULT_CODE, appActions } from "../../app/app.slice";
 import { getErorMessage } from "../../common/utilis/getErrorMessage";
 
 const THUNK_PREFIXES = {
@@ -23,10 +23,10 @@ const me = createAppAsyncThunk<MePayload, {}>(THUNK_PREFIXES.ME, async (args, th
       if (res.data.resultCode === RESULT_CODE.OK) {
         return { isLoggedIn: true, user: res.data.data };
       } else {
-        return thunkApi.rejectWithValue(getErorMessage(res.data));
+        return thunkApi.rejectWithValue({ error: getErorMessage(res.data), showGlobalError: false });
       }
     },
-    { showGlobalError: true }
+    { showGlobalError: false }
   );
 });
 
@@ -42,7 +42,7 @@ const login = createAppAsyncThunk<LoginPayload, LoginArgs>(THUNK_PREFIXES.LOGIN,
     } else {
       if (res.data.fieldsErrors.length === 0) {
         toast.error(res.data.messages[0]);
-        return thunkApi.rejectWithValue({});
+        return thunkApi.rejectWithValue({ error: getErorMessage(res.data), showGlobalError: true });
       } else {
         return thunkApi.rejectWithValue(res.data);
       }
@@ -59,7 +59,7 @@ const logout = createAppAsyncThunk<LogoutPayload>(THUNK_PREFIXES.LOGOUT, async (
     } else {
       toast.error(res.data.messages[0]);
     }
-    return thunkApi.rejectWithValue("e");
+    return thunkApi.rejectWithValue({ error: getErorMessage(res.data), showGlobalError: true });
   });
 });
 
