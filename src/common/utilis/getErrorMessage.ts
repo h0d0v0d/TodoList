@@ -1,4 +1,4 @@
-import { AxiosError, isAxiosError } from "axios";
+import { isAxiosError } from "axios";
 import { ResponseType } from "../../features/auth/auth.api";
 
 export type ErrorType = any;

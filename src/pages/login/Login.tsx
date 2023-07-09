@@ -45,7 +45,6 @@ export const Login = () => {
           setError(r.field, { type: "value", message: r.error });
         });
       });
-    reset();
   };
   return (
     <div className="login-page">

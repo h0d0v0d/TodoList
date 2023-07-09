@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { LoginArgs, User, authAPI } from "./auth.api";
 import { createAppAsyncThunk } from "../../common/utilis/create-app-async-thunk";
 import { thunkTryCatch } from "../../common/utilis/thunk-try-catch";
-import { RESULT_CODE, appActions } from "../../app/app.slice";
+import { RESULT_CODE } from "../../app/app.slice";
 import { getErorMessage } from "../../common/utilis/getErrorMessage";
 
 const THUNK_PREFIXES = {
