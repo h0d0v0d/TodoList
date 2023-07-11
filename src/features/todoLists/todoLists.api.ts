@@ -3,22 +3,22 @@ import axios from "axios";
 import { ResponseType } from "../auth/auth.api";
 
 const instance = axios.create({
-  baseURL: "https://social-network.samuraijs.com/api/1.1/",
+  baseURL: "https://social-network.samuraijs.com/api/1.1/todo-lists/",
   withCredentials: true,
 });
 
 export const todoListAPI = {
   getTodoLists() {
-    return instance.get<TodoListType[]>(`todo-lists`);
+    return instance.get<TodoListType[]>(``);
   },
   createTodoList(args: CreateTodoListArgs) {
-    return instance.post<ResponseType<{ item: TodoListType }>>(`todo-lists`, args);
+    return instance.post<ResponseType<{ item: TodoListType }>>(``, args);
   },
   changeTodoListTitle({ todoListId, title }: ChangeTodoListTitleArgs) {
-    return instance.put<ResponseType>(`todo-lists/${todoListId}`, { title });
+    return instance.put<ResponseType>(`${todoListId}`, { title });
   },
   deleteTodoList({ todoListId }: DeleteTodoListArgs) {
-    return instance.delete<ResponseType<{}>>(`todo-lists/${todoListId}`);
+    return instance.delete<ResponseType<{}>>(`${todoListId}`);
   },
 };
 

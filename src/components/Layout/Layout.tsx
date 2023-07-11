@@ -12,7 +12,6 @@ import { Toast } from "../Toast/Toast";
 export const Layout = () => {
   const navigate = useNavigate();
   const globalLoading = useAppSelector(appSelectors.loading);
-  const error = useAppSelector(appSelectors.error);
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(authThunks.me({}))
@@ -24,8 +23,6 @@ export const Layout = () => {
   return (
     <div className="">
       {globalLoading && <LinearProgress />}
-      error
-      {error && <h2>{error}</h2>}
       <Outlet />
       <Toast />
     </div>

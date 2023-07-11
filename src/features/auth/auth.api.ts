@@ -1,19 +1,19 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "https://social-network.samuraijs.com/api/1.1/",
+  baseURL: "https://social-network.samuraijs.com/api/1.1/auth/",
   withCredentials: true,
 });
 
 export const authAPI = {
   me() {
-    return instance.get<ResponseType<User>>("auth/me");
+    return instance.get<ResponseType<User>>("me");
   },
   login(args: LoginArgs) {
-    return instance.post<ResponseType<{ userId: number }>>("auth/login", args);
+    return instance.post<ResponseType<{ userId: number }>>("login", args);
   },
   logout() {
-    return instance.delete<ResponseType>("auth/login");
+    return instance.delete<ResponseType>("login");
   },
 };
 
