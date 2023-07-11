@@ -9,6 +9,9 @@ import {
 import { createAppAsyncThunk } from "../../common/utilis/create-app-async-thunk";
 import { thunkTryCatch } from "../../common/utilis/thunk-try-catch";
 import { authThunks } from "../auth/auth.slice";
+import { RESULT_CODE } from "../../app/app.slice";
+import { toast } from "react-toastify";
+import { getErorMessage } from "../../common/utilis/getErrorMessage";
 
 const THUNK_PREFIXES = {
   TODO_LISTS: "todo-lists",
@@ -21,22 +24,36 @@ const THUNK_PREFIXES = {
 
 type GetTodoListsPayload = { todoLists: TodoListType[] };
 const getTodoLists = createAppAsyncThunk<GetTodoListsPayload>(THUNK_PREFIXES.GET_TODO_LISTS, async (args, thunkApi) => {
-  return thunkTryCatch(thunkApi, async () => {
-    const res = await todoListAPI.getTodoLists();
-    const todoLists = res.data;
-    return { todoLists };
-  });
+  return thunkTryCatch(
+    thunkApi,
+    async () => {
+      const res = await todoListAPI.getTodoLists();
+      const todoLists = res.data;
+      return { todoLists };
+    },
+    { showGlobalError: true }
+  );
 });
 
 type CreateTodoListPayload = { item: TodoListType };
 const createTodoList = createAppAsyncThunk<CreateTodoListPayload, CreateTodoListArgs>(
   THUNK_PREFIXES.CREATE_TODO_LIST,
   async (args, thunkApi) => {
-    return thunkTryCatch(thunkApi, async () => {
-      const res = await todoListAPI.createTodoList(args);
-      const item = res.data.data.item;
-      return { item };
-    });
+    return thunkTryCatch(
+      thunkApi,
+      async () => {
+        const res = await todoListAPI.createTodoList(args);
+        if (res.data.resultCode === RESULT_CODE.OK) {
+          const item = res.data.data.item;
+          return { item };
+        } else {
+          const errorText = getErorMessage(res.data);
+          toast.error(errorText);
+          return thunkApi.rejectWithValue({ error: errorText, showGlobalError: true });
+        }
+      },
+      { showGlobalError: true }
+    );
   }
 );
 
@@ -44,22 +61,37 @@ type ChangeTodoListTitlePayload = ChangeTodoListTitleArgs;
 const changeTodoListTitle = createAppAsyncThunk<ChangeTodoListTitlePayload, ChangeTodoListTitleArgs>(
   THUNK_PREFIXES.UPDATE_TODO_LIST_TITLE,
   async (args, thunkApi) => {
-    return thunkTryCatch(thunkApi, async () => {
-      const res = await todoListAPI.changeTodoListTitle(args);
-      return args;
-    });
-  },
-  {}
+    return thunkTryCatch(
+      thunkApi,
+      async () => {
+        const res = await todoListAPI.changeTodoListTitle(args);
+        if (res.data.resultCode === RESULT_CODE.OK) {
+          return args;
+        } else {
+          return thunkApi.rejectWithValue({ error: getErorMessage(res.data), showGlobalError: true });
+        }
+      },
+      { showGlobalError: true }
+    );
+  }
 );
 
 type DeleteTodoListPayload = DeleteTodoListArgs;
 const deleteTodoList = createAppAsyncThunk<DeleteTodoListPayload, DeleteTodoListArgs>(
   THUNK_PREFIXES.DELETE_TODO_LIST,
   async (args, thunkApi) => {
-    return thunkTryCatch(thunkApi, async () => {
-      const res = await todoListAPI.deleteTodoList(args);
-      return args;
-    });
+    return thunkTryCatch(
+      thunkApi,
+      async () => {
+        const res = await todoListAPI.deleteTodoList(args);
+        if (res.data.resultCode === RESULT_CODE.OK) {
+          return args;
+        } else {
+          return thunkApi.rejectWithValue({ error: getErorMessage(res.data), showGlobalError: true });
+        }
+      },
+      { showGlobalError: true }
+    );
   }
 );
 

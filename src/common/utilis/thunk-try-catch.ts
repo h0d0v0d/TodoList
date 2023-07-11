@@ -2,6 +2,8 @@ import { toast } from "react-toastify";
 import { BaseThunkAPI } from "@reduxjs/toolkit/dist/createAsyncThunk";
 import { AppDispatch, RootState } from "../../app/store";
 import { handleServerError505 } from "./server-error-505";
+import { getErorMessage } from "./getErrorMessage";
+import { AxiosError } from "axios";
 type Options = { showGlobalError?: boolean | undefined };
 
 /**
@@ -19,14 +21,16 @@ export const thunkTryCatch = async <T>(
   promise: () => Promise<T>,
   options?: Options
 ): Promise<T | ReturnType<typeof thunkAPI.rejectWithValue>> => {
-  const { rejectWithValue, dispatch } = thunkAPI;
+  const { rejectWithValue } = thunkAPI;
   const showGlobalError = options?.showGlobalError ?? false;
 
   try {
     return await promise();
   } catch (e: any) {
-    handleServerError505(dispatch);
-    toast.error("505");
-    return rejectWithValue({ error: e, showGlobalError });
+    const errorText = getErorMessage(e);
+    if (showGlobalError) {
+      toast.error(errorText);
+    }
+    return rejectWithValue({ error: errorText, showGlobalError });
   }
 };

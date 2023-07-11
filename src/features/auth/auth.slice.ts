@@ -32,35 +32,45 @@ const me = createAppAsyncThunk<MePayload, {}>(THUNK_PREFIXES.ME, async (args, th
 
 type LoginPayload = { isLoggedIn: boolean; userId: number };
 const login = createAppAsyncThunk<LoginPayload, LoginArgs>(THUNK_PREFIXES.LOGIN, async (args, thunkApi) => {
-  return thunkTryCatch(thunkApi, async () => {
-    const res = await authAPI.login({
-      email: args.email,
-      password: args.password,
-    });
-    if (res.data.resultCode === RESULT_CODE.OK) {
-      return { isLoggedIn: true, userId: res.data.data.userId };
-    } else {
-      if (res.data.fieldsErrors.length === 0) {
-        toast.error(res.data.messages[0]);
-        return thunkApi.rejectWithValue({ error: getErorMessage(res.data), showGlobalError: true });
+  return thunkTryCatch(
+    thunkApi,
+    async () => {
+      const res = await authAPI.login({
+        email: args.email,
+        password: args.password,
+      });
+      if (res.data.resultCode === RESULT_CODE.OK) {
+        return { isLoggedIn: true, userId: res.data.data.userId };
       } else {
-        return thunkApi.rejectWithValue(res.data);
+        if (res.data.fieldsErrors.length === 0) {
+          toast.error(res.data.messages[0]);
+          return thunkApi.rejectWithValue({ error: getErorMessage(res.data), showGlobalError: true });
+        } else {
+          return thunkApi.rejectWithValue(res.data);
+        }
       }
+    },
+    {
+      showGlobalError: true,
     }
-  });
+  );
 });
 
 type LogoutPayload = { isLoggedIn: boolean };
 const logout = createAppAsyncThunk<LogoutPayload>(THUNK_PREFIXES.LOGOUT, async (args, thunkApi) => {
-  return thunkTryCatch(thunkApi, async () => {
-    const res = await authAPI.logout();
-    if (res.data.resultCode === RESULT_CODE.OK) {
-      return { isLoggedIn: false };
-    } else {
-      toast.error(res.data.messages[0]);
-    }
-    return thunkApi.rejectWithValue({ error: getErorMessage(res.data), showGlobalError: true });
-  });
+  return thunkTryCatch(
+    thunkApi,
+    async () => {
+      const res = await authAPI.logout();
+      if (res.data.resultCode === RESULT_CODE.OK) {
+        return { isLoggedIn: false };
+      } else {
+        toast.error(res.data.messages[0]);
+      }
+      return thunkApi.rejectWithValue({ error: getErorMessage(res.data), showGlobalError: true });
+    },
+    { showGlobalError: true }
+  );
 });
 
 const slice = createSlice({
