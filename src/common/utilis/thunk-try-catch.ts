@@ -5,7 +5,10 @@ import { getErorMessage } from "./getErrorMessage";
 
 type Options = {
   showGlobalError?: boolean | undefined;
-  rejectPayload?: { todoListId: string; taskId: string; rejectFunction: (toddListId: string, taskId: string) => void };
+  rejectPayload?: {
+    todoListId: string;
+    taskId: string;
+  };
 };
 
 /**
@@ -29,13 +32,12 @@ export const thunkTryCatch = async <T>(
   try {
     return await promise();
   } catch (e: any) {
-    if (options?.rejectPayload) {
-      const { rejectFunction, taskId, todoListId } = options.rejectPayload;
-      rejectFunction(todoListId, taskId);
-    }
     const errorText = getErorMessage(e);
     if (showGlobalError) {
       toast.error(errorText);
+    }
+    if (options?.rejectPayload) {
+      return rejectWithValue({ error: errorText, showGlobalError, rejectPayload: options.rejectPayload });
     }
     return rejectWithValue({ error: errorText, showGlobalError });
   }

@@ -15,7 +15,7 @@ export const tasksAPI = {
     return instance.post<ResponseType<{ item: TaskType }>>(`${todoListId}/tasks`, { title });
   },
   changeTask({ todoListId, taskId, ...restArgs }: ChangeTaskArgs) {
-    return axios.put<ResponseType<{ item: TaskType }>>(`${todoListId}/tasks/${taskId}`, restArgs);
+    return instance.put<ResponseType<{ item: TaskType }>>(`${todoListId}/tasks/${taskId}`, restArgs);
   },
   deleteTask({ todoListId, taskId }: DeleteTaskArgs) {
     return instance.delete<ResponseType>(`${todoListId}/tasks/${taskId}`);
