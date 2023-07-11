@@ -6,7 +6,7 @@ export type ErrorType = any;
 export const getErorMessage = (error: ResponseType | string): string => {
   let errorMessage = "";
   if (isAxiosError(error)) {
-    errorMessage = `Code: ${error?.response?.status}` ?? error.message;
+    errorMessage = error.response?.data.message ?? error.message ?? `Code: ${error?.response?.status}`;
     // ?? проверяет на null и undefined
   } else if (error instanceof Object && "messages" in error) {
     errorMessage = error.messages[0];

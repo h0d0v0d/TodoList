@@ -23,7 +23,8 @@ const me = createAppAsyncThunk<MePayload, {}>(THUNK_PREFIXES.ME, async (args, th
       if (res.data.resultCode === RESULT_CODE.OK) {
         return { isLoggedIn: true, user: res.data.data };
       } else {
-        return thunkApi.rejectWithValue({ error: getErorMessage(res.data), showGlobalError: false });
+        const error = getErorMessage(res.data);
+        return thunkApi.rejectWithValue({ error, showGlobalError: false });
       }
     },
     { showGlobalError: false }
@@ -42,9 +43,10 @@ const login = createAppAsyncThunk<LoginPayload, LoginArgs>(THUNK_PREFIXES.LOGIN,
       if (res.data.resultCode === RESULT_CODE.OK) {
         return { isLoggedIn: true, userId: res.data.data.userId };
       } else {
-        if (res.data.fieldsErrors.length === 0) {
-          toast.error(res.data.messages[0]);
-          return thunkApi.rejectWithValue({ error: getErorMessage(res.data), showGlobalError: true });
+        if (res.data.fieldsErrors?.length === 0) {
+          const error = getErorMessage(res.data);
+          toast.error(error);
+          return thunkApi.rejectWithValue({ error, showGlobalError: true });
         } else {
           return thunkApi.rejectWithValue(res.data);
         }
@@ -65,9 +67,10 @@ const logout = createAppAsyncThunk<LogoutPayload>(THUNK_PREFIXES.LOGOUT, async (
       if (res.data.resultCode === RESULT_CODE.OK) {
         return { isLoggedIn: false };
       } else {
-        toast.error(res.data.messages[0]);
+        const error = getErorMessage(res.data);
+        toast.error(error);
+        return thunkApi.rejectWithValue({ error, showGlobalError: true });
       }
-      return thunkApi.rejectWithValue({ error: getErorMessage(res.data), showGlobalError: true });
     },
     { showGlobalError: true }
   );

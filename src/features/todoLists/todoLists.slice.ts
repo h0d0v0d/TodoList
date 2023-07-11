@@ -47,9 +47,9 @@ const createTodoList = createAppAsyncThunk<CreateTodoListPayload, CreateTodoList
           const item = res.data.data.item;
           return { item };
         } else {
-          const errorText = getErorMessage(res.data);
-          toast.error(errorText);
-          return thunkApi.rejectWithValue({ error: errorText, showGlobalError: true });
+          const error = getErorMessage(res.data);
+          toast.error(error);
+          return thunkApi.rejectWithValue({ error, showGlobalError: true });
         }
       },
       { showGlobalError: true }
@@ -68,7 +68,9 @@ const changeTodoListTitle = createAppAsyncThunk<ChangeTodoListTitlePayload, Chan
         if (res.data.resultCode === RESULT_CODE.OK) {
           return args;
         } else {
-          return thunkApi.rejectWithValue({ error: getErorMessage(res.data), showGlobalError: true });
+          const error = getErorMessage(res.data);
+          toast.error(error);
+          return thunkApi.rejectWithValue({ error, showGlobalError: true });
         }
       },
       { showGlobalError: true }
@@ -87,7 +89,9 @@ const deleteTodoList = createAppAsyncThunk<DeleteTodoListPayload, DeleteTodoList
         if (res.data.resultCode === RESULT_CODE.OK) {
           return args;
         } else {
-          return thunkApi.rejectWithValue({ error: getErorMessage(res.data), showGlobalError: true });
+          const error = getErorMessage(res.data);
+          toast.error(error);
+          return thunkApi.rejectWithValue({ error, showGlobalError: true });
         }
       },
       { showGlobalError: true }

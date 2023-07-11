@@ -1,5 +1,7 @@
 import axios from "axios";
 
+import { ResponseType } from "../auth/auth.api";
+
 const instance = axios.create({
   baseURL: "https://social-network.samuraijs.com/api/1.1/todo-lists/",
   withCredentials: true,
@@ -10,15 +12,13 @@ export const tasksAPI = {
     return instance.get<GetTasksResponse>(`${todoListID}/tasks`);
   },
   createTask({ todoListId, title }: CreateTaskArgs) {
-    return instance.post<CreateOrUpdateTaskResponse>(`${todoListId}/tasks`, {
-      title,
-    });
+    return instance.post<ResponseType<{ item: TaskType }>>(`${todoListId}/tasks`, { title });
   },
   changeTask({ todoListId, taskId, ...restArgs }: ChangeTaskArgs) {
-    return instance.put<CreateOrUpdateTaskResponse>(`${todoListId}/tasks/${taskId}`, restArgs);
+    return axios.put<ResponseType<{ item: TaskType }>>(`${todoListId}/tasks/${taskId}`, restArgs);
   },
   deleteTask({ todoListId, taskId }: DeleteTaskArgs) {
-    return instance.delete<DeleteTaskResponse>(`${todoListId}/tasks/${taskId}`);
+    return instance.delete<ResponseType>(`${todoListId}/tasks/${taskId}`);
   },
 };
 
@@ -48,14 +48,6 @@ type CreateTaskArgs = {
   title: string;
 };
 
-type CreateOrUpdateTaskResponse = {
-  data: {
-    item: TaskType;
-  };
-  resultCode: number;
-  messages: string[];
-};
-
 // Change Task
 export type ChangeTaskArgs = {
   todoListId: string;
@@ -68,10 +60,4 @@ export type ChangeTaskArgs = {
 export type DeleteTaskArgs = {
   todoListId: string;
   taskId: string;
-};
-
-type DeleteTaskResponse = {
-  resultCode: number;
-  messages: string[];
-  data: {};
 };

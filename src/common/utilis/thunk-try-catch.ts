@@ -1,10 +1,12 @@
 import { toast } from "react-toastify";
 import { BaseThunkAPI } from "@reduxjs/toolkit/dist/createAsyncThunk";
 import { AppDispatch, RootState } from "../../app/store";
-import { handleServerError505 } from "./server-error-505";
 import { getErorMessage } from "./getErrorMessage";
-import { AxiosError } from "axios";
-type Options = { showGlobalError?: boolean | undefined };
+
+type Options = {
+  showGlobalError?: boolean | undefined;
+  rejectPayload?: { todoListId: string; taskId: string; rejectFunction: (toddListId: string, taskId: string) => void };
+};
 
 /**
  * A helper function for creating thunks that handle try/catch blocks and server errors.
@@ -27,6 +29,10 @@ export const thunkTryCatch = async <T>(
   try {
     return await promise();
   } catch (e: any) {
+    if (options?.rejectPayload) {
+      const { rejectFunction, taskId, todoListId } = options.rejectPayload;
+      rejectFunction(todoListId, taskId);
+    }
     const errorText = getErorMessage(e);
     if (showGlobalError) {
       toast.error(errorText);

@@ -37,10 +37,10 @@ export const Login = () => {
         navigate("/todo-lists");
       })
       .catch((reason: ResponseType) => {
-        if (reason.fieldsErrors.length === 0) {
+        if (reason.fieldsErrors?.length === 0) {
           return;
         }
-        reason.fieldsErrors.forEach((r) => {
+        reason.fieldsErrors?.forEach((r) => {
           // @ts-ignore
           setError(r.field, { type: "value", message: r.error });
         });
