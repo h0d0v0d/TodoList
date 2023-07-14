@@ -4,7 +4,7 @@ import IconButton from "@mui/material/IconButton";
 import Checkbox from "@mui/material/Checkbox";
 
 import { useActions, useAppDispatch } from "../../../common/hooks";
-import { AppTaskType, tasksThunks } from "../../../features/tasks/model/tasks.slice";
+import { AppTaskType, tasksThunks } from "../../../features/tasks";
 
 import { EditableSpan } from "../../EditableSpan/EditableSpan";
 
