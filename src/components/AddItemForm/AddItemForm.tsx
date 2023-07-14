@@ -3,13 +3,11 @@ import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import { AddBox } from "@mui/icons-material";
 
-type AddItemFormPropsType = {
+type AddItemFormProps = {
   addItem: (title: string) => void;
 };
 
-export const AddItemForm: React.FC<AddItemFormPropsType> = React.memo(({ addItem }) => {
-  console.log("AddItemForm");
-
+export const AddItemForm: React.FC<AddItemFormProps> = React.memo(({ addItem }) => {
   let [title, setTitle] = useState("");
   let [error, setError] = useState<string | null>(null);
 

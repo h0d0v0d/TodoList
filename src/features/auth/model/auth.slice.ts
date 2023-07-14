@@ -43,19 +43,16 @@ const login = createAppAsyncThunk<LoginPayload, LoginArgs>(THUNK_PREFIXES.LOGIN,
       if (res.data.resultCode === RESULT_CODE.OK) {
         return { isLoggedIn: true, userId: res.data.data.userId };
       } else {
-        return thunkApi.rejectWithValue({ data: res.data, showGlobalError: true });
-        /* if (res.data.fieldsErrors?.length === 0) {
+        if (res.data.fieldsErrors?.length === 0) {
           const error = getErorMessage(res.data);
           toast.error(error);
           return thunkApi.rejectWithValue({ error, showGlobalError: true });
         } else {
           return thunkApi.rejectWithValue(res.data);
-        } */
+        }
       }
     },
-    {
-      showGlobalError: true,
-    }
+    { showGlobalError: true }
   );
 });
 

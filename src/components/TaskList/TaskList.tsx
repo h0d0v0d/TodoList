@@ -10,7 +10,6 @@ type TaskListProps = {
 };
 
 export const TaskList: React.FC<TaskListProps> = ({ tasks, todoListId }) => {
-  console.log("taskList");
   return (
     <div>
       {tasks.map((t) => (
