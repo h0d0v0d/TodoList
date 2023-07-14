@@ -1,17 +1,18 @@
 import React from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import FormGroup from "@mui/material/FormGroup/FormGroup";
 import TextField from "@mui/material/TextField";
-import { ResponseType } from "../../features/auth/auth.api";
-
-import { useActions, useAppDispatch } from "../../common/hooks";
 
 import { authThunks } from "../../features/auth/model/auth.slice";
 
+import { emailValidate, passwordValidate } from "../../common/utilis";
+import { getErorMessage } from "../../common/utilis";
+import { useActions } from "../../common/hooks";
+
+import { ResponseType } from "../../features/auth/auth.api";
 import "./login.css";
-import { emailValidate, passwordValidate } from "../../common/utilis/validate";
-import { toast } from "react-toastify";
 
 export const Login = () => {
   const { login } = useActions(authThunks);
@@ -20,7 +21,6 @@ export const Login = () => {
     register,
     handleSubmit,
     formState: { errors, isValid },
-    reset,
     setError,
   } = useForm({
     defaultValues: {
@@ -36,11 +36,11 @@ export const Login = () => {
       .then(() => {
         navigate("/todo-lists");
       })
-      .catch((reason: ResponseType) => {
-        if (reason.fieldsErrors?.length === 0) {
-          return;
+      .catch((reason: { data: ResponseType; showGlobalError: boolean }) => {
+        if (reason.data.fieldsErrors?.length === 0) {
+          toast.error(getErorMessage(reason.data));
         }
-        reason.fieldsErrors?.forEach((r) => {
+        reason.data.fieldsErrors?.forEach((r) => {
           // @ts-ignore
           setError(r.field, { type: "value", message: r.error });
         });

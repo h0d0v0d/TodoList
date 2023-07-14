@@ -1,18 +1,18 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
 
-import { createAppAsyncThunk } from "../../../common/utilis/create-app-async-thunk";
-import { thunkTryCatch } from "../../../common/utilis/thunk-try-catch";
+import { createAppAsyncThunk } from "../../../common/utilis";
+import { thunkTryCatch } from "../../../common/utilis";
 import { ChangeTaskArgs, DeleteTaskArgs, TaskType, tasksAPI } from "../tasks.api";
 import { todoListsThunks } from "../../todoLists/model/todoLists.slice";
 import { authThunks } from "../../auth/model/auth.slice";
-import { getErorMessage } from "../../../common/utilis/getErrorMessage";
+import { getErorMessage } from "../../../common/utilis";
 import { RESULT_CODE } from "../../../app/app.slice";
-import { toast } from "react-toastify";
 
 const THUNK_PREFIXES = {
   TASKS: "tasks",
   GET_TASKS: "tasks/get-tasks",
-  CREATED_TASKS: "tasks/create-tasks",
+  CREATE_TASKS: "tasks/create-tasks",
   CHANGE_TASK: "tasks/change-task",
   DELETE_TASK: "tasks/delete-tasks",
 } as const;
@@ -43,7 +43,7 @@ const getTasks = createAppAsyncThunk<GetTasksPayload, { todoListId: string }>(
 type CreateTasksArgs = { todoListId: string; title: string };
 type CreateTasksPayload = { todoListId: string; item: TaskType };
 const createTasks = createAppAsyncThunk<CreateTasksPayload, CreateTasksArgs>(
-  THUNK_PREFIXES.CREATED_TASKS,
+  THUNK_PREFIXES.CREATE_TASKS,
   async (args, thunkApi) => {
     return thunkTryCatch(
       thunkApi,

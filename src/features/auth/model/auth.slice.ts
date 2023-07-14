@@ -2,10 +2,10 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 
 import { LoginArgs, User, authAPI } from "../auth.api";
-import { createAppAsyncThunk } from "../../../common/utilis/create-app-async-thunk";
-import { thunkTryCatch } from "../../../common/utilis/thunk-try-catch";
+import { createAppAsyncThunk } from "../../../common/utilis";
+import { thunkTryCatch } from "../../../common/utilis";
 import { RESULT_CODE } from "../../../app/app.slice";
-import { getErorMessage } from "../../../common/utilis/getErrorMessage";
+import { getErorMessage } from "../../../common/utilis";
 
 const THUNK_PREFIXES = {
   AUTH: "auth",
@@ -15,7 +15,7 @@ const THUNK_PREFIXES = {
 } as const;
 
 type MePayload = { isLoggedIn: boolean; user: User };
-const me = createAppAsyncThunk<MePayload, {}>(THUNK_PREFIXES.ME, async (args, thunkApi) => {
+const me = createAppAsyncThunk<MePayload>(THUNK_PREFIXES.ME, async (args, thunkApi) => {
   return thunkTryCatch(
     thunkApi,
     async () => {
@@ -24,10 +24,10 @@ const me = createAppAsyncThunk<MePayload, {}>(THUNK_PREFIXES.ME, async (args, th
         return { isLoggedIn: true, user: res.data.data };
       } else {
         const error = getErorMessage(res.data);
-        return thunkApi.rejectWithValue({ error, showGlobalError: false });
+        return thunkApi.rejectWithValue({ error, showGlobalError: true });
       }
     },
-    { showGlobalError: false }
+    { showGlobalError: true }
   );
 });
 
@@ -43,13 +43,14 @@ const login = createAppAsyncThunk<LoginPayload, LoginArgs>(THUNK_PREFIXES.LOGIN,
       if (res.data.resultCode === RESULT_CODE.OK) {
         return { isLoggedIn: true, userId: res.data.data.userId };
       } else {
-        if (res.data.fieldsErrors?.length === 0) {
+        return thunkApi.rejectWithValue({ data: res.data, showGlobalError: true });
+        /* if (res.data.fieldsErrors?.length === 0) {
           const error = getErorMessage(res.data);
           toast.error(error);
           return thunkApi.rejectWithValue({ error, showGlobalError: true });
         } else {
           return thunkApi.rejectWithValue(res.data);
-        }
+        } */
       }
     },
     {
