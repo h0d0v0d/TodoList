@@ -10,7 +10,7 @@ import {
 } from "../todoLists.api";
 import { createAppAsyncThunk } from "../../../common/utilis";
 import { thunkTryCatch } from "../../../common/utilis";
-import { authThunks } from "../../auth/model/auth.slice";
+import { authThunks } from "../../auth";
 import { RESULT_CODE } from "../../../app/app.slice";
 import { getErorMessage } from "../../../common/utilis";
 

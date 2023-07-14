@@ -2,7 +2,7 @@ import { FC, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useAppSelector } from "../hooks";
-import { authSelectors } from "../../features/auth/model/auth.selectors";
+import { authSelectors } from "../../features/auth";
 
 export function withRedirect<T>(BaseComponent: FC<T>): FC<T> {
   return (props: any) => {

@@ -3,13 +3,12 @@ import Grid from "@mui/material/Grid";
 import { Button, Container, Toolbar } from "@mui/material";
 
 import { useActions, useAppDispatch, useAppSelector } from "../../common/hooks";
-import { todoListsThunks } from "../../features/todoLists/model/todoLists.slice";
+import { todoListsThunks, selectTodoListsData } from "../../features/todoLists";
 import { authThunks } from "../../features/auth/model/auth.slice";
-import { selectTodoListsData } from "../../features/todoLists/model/todoLists.selectors";
+import { authSelectors } from "../../features/auth";
 
 import { Todolist } from "../../components/TodoList/Todolist";
 import { AddItemForm } from "../../components/AddItemForm/AddItemForm";
-import { authSelectors } from "../../features/auth/model/auth.selectors";
 
 export const TodoLists = () => {
   const todolists = useAppSelector(selectTodoListsData);
@@ -24,13 +23,9 @@ export const TodoLists = () => {
     [dispatch]
   );
 
-  const logoutHandler = () => {
-    logout()
-      .unwrap()
-      .then(() => {
-        console.log("3");
-      });
-  };
+  const logoutHandler = useCallback(() => {
+    logout().unwrap();
+  }, [dispatch]);
 
   useEffect(() => {
     getTodoLists();

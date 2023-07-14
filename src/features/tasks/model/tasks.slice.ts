@@ -4,8 +4,8 @@ import { toast } from "react-toastify";
 import { createAppAsyncThunk } from "../../../common/utilis";
 import { thunkTryCatch } from "../../../common/utilis";
 import { ChangeTaskArgs, DeleteTaskArgs, TaskType, tasksAPI } from "../tasks.api";
-import { todoListsThunks } from "../../todoLists/model/todoLists.slice";
-import { authThunks } from "../../auth/model/auth.slice";
+import { todoListsThunks } from "../../todoLists";
+import { authThunks } from "../../auth";
 import { getErorMessage } from "../../../common/utilis";
 import { RESULT_CODE } from "../../../app/app.slice";
 

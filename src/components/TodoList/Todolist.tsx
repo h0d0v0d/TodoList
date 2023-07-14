@@ -6,8 +6,7 @@ import { Grid, Paper } from "@mui/material";
 
 import { useAppDispatch, useAppSelector } from "../../common/hooks";
 import { tasksThunks } from "../../features/tasks/model/tasks.slice";
-import { FilterType, todoListsThunks } from "../../features/todoLists/model/todoLists.slice";
-import { selectTodoListById } from "../../features/todoLists/model/todoLists.selectors";
+import { FilterType, todoListsThunks, selectTodoListById } from "../../features/todoLists";
 import { selectFilteredTasksById } from "../../features/tasks/model/tasks.selectors";
 import { useActions } from "../../common/hooks/";
 

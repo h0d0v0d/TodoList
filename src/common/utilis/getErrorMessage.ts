@@ -1,5 +1,5 @@
 import { isAxiosError } from "axios";
-import { ResponseType } from "../../features/auth/auth.api";
+import { ResponseType } from "../../features/auth";
 
 export type ErrorType = any;
 
