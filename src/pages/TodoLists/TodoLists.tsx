@@ -6,8 +6,8 @@ import { useActions, useAppDispatch, useAppSelector } from "../../common/hooks";
 import { todoListsThunks, selectTodoListsData } from "../../features/todoLists";
 import { authSelectors, authThunks } from "../../features/auth";
 
-import { Todolist } from "../../components/TodoList/Todolist";
-import { AddItemForm } from "../../components/AddItemForm/AddItemForm";
+import { Todolist } from "../../components";
+import { AddItemForm } from "../../components";
 
 export const TodoLists = () => {
   const todolists = useAppSelector(selectTodoListsData);

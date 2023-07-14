@@ -7,7 +7,7 @@ import { withRedirect } from "./common/HOK";
 
 import { TodoLists } from "./pages/todoLists/TodoLists";
 import { Login } from "./pages/login/Login";
-import { Layout } from "./components/Layout/Layout";
+import { Layout } from "./components";
 import Error from "./pages/error/Error";
 
 const router = createBrowserRouter([

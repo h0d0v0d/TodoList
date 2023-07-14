@@ -5,10 +5,9 @@ import { Delete } from "@mui/icons-material";
 import { Grid, Paper } from "@mui/material";
 
 import { useAppDispatch, useAppSelector } from "../../common/hooks";
-import { tasksThunks } from "../../features/tasks";
+import { tasksThunks, selectFilteredTasksById } from "../../features/tasks";
 import { FilterType, todoListsThunks, selectTodoListById } from "../../features/todoLists";
-import { selectFilteredTasksById } from "../../features/tasks/model/tasks.selectors";
-import { useActions } from "../../common/hooks/";
+import { useActions } from "../../common/hooks";
 
 import { AddItemForm } from "../AddItemForm/AddItemForm";
 import { EditableSpan } from "../EditableSpan/EditableSpan";
