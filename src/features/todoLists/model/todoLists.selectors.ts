@@ -1,5 +1,5 @@
 import { createSelector } from "@reduxjs/toolkit";
-import { RootState } from "../../app/store";
+import { RootState } from "../../../app/store";
 import { AppTodoListType } from "./todoLists.slice";
 
 export const selectTodoListsData = (state: RootState) => state.todoLists.todoListsData;

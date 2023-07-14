@@ -5,13 +5,13 @@ import {
   DeleteTodoListArgs,
   TodoListType,
   todoListAPI,
-} from "./todoLists.api";
-import { createAppAsyncThunk } from "../../common/utilis/create-app-async-thunk";
-import { thunkTryCatch } from "../../common/utilis/thunk-try-catch";
-import { authThunks } from "../auth/auth.slice";
-import { RESULT_CODE } from "../../app/app.slice";
+} from "../todoLists.api";
+import { createAppAsyncThunk } from "../../../common/utilis/create-app-async-thunk";
+import { thunkTryCatch } from "../../../common/utilis/thunk-try-catch";
+import { authThunks } from "../../auth/model/auth.slice";
+import { RESULT_CODE } from "../../../app/app.slice";
 import { toast } from "react-toastify";
-import { getErorMessage } from "../../common/utilis/getErrorMessage";
+import { getErorMessage } from "../../../common/utilis/getErrorMessage";
 
 const THUNK_PREFIXES = {
   TODO_LISTS: "todo-lists",

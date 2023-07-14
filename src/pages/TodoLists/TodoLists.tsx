@@ -3,13 +3,13 @@ import Grid from "@mui/material/Grid";
 import { Button, Container, Toolbar } from "@mui/material";
 
 import { useActions, useAppDispatch, useAppSelector } from "../../common/hooks";
-import { todoListsThunks } from "../../features/todoLists/todoLists.slice";
-import { authThunks } from "../../features/auth/auth.slice";
-import { selectTodoListsData } from "../../features/todoLists/todoLists.selectors";
+import { todoListsThunks } from "../../features/todoLists/model/todoLists.slice";
+import { authThunks } from "../../features/auth/model/auth.slice";
+import { selectTodoListsData } from "../../features/todoLists/model/todoLists.selectors";
 
 import { Todolist } from "../../components/TodoList/Todolist";
 import { AddItemForm } from "../../components/AddItemForm/AddItemForm";
-import { authSelectors } from "../../features/auth/auth.selectors";
+import { authSelectors } from "../../features/auth/model/auth.selectors";
 
 export const TodoLists = () => {
   const todolists = useAppSelector(selectTodoListsData);
@@ -25,7 +25,11 @@ export const TodoLists = () => {
   );
 
   const logoutHandler = () => {
-    logout();
+    logout()
+      .unwrap()
+      .then(() => {
+        console.log("3");
+      });
   };
 
   useEffect(() => {

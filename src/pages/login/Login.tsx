@@ -7,7 +7,7 @@ import { ResponseType } from "../../features/auth/auth.api";
 
 import { useActions, useAppDispatch } from "../../common/hooks";
 
-import { authThunks } from "../../features/auth/auth.slice";
+import { authThunks } from "../../features/auth/model/auth.slice";
 
 import "./login.css";
 import { emailValidate, passwordValidate } from "../../common/utilis/validate";

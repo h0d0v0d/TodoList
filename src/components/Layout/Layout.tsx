@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 
 import { useAppDispatch, useAppSelector } from "../../common/hooks";
-import { authThunks } from "../../features/auth/auth.slice";
+import { authThunks } from "../../features/auth/model/auth.slice";
 import { LinearProgress } from "@mui/material";
 import { appSelectors } from "../../app/app.selectors";
 

@@ -1,11 +1,11 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 
-import { LoginArgs, User, authAPI } from "./auth.api";
-import { createAppAsyncThunk } from "../../common/utilis/create-app-async-thunk";
-import { thunkTryCatch } from "../../common/utilis/thunk-try-catch";
-import { RESULT_CODE } from "../../app/app.slice";
-import { getErorMessage } from "../../common/utilis/getErrorMessage";
+import { LoginArgs, User, authAPI } from "../auth.api";
+import { createAppAsyncThunk } from "../../../common/utilis/create-app-async-thunk";
+import { thunkTryCatch } from "../../../common/utilis/thunk-try-catch";
+import { RESULT_CODE } from "../../../app/app.slice";
+import { getErorMessage } from "../../../common/utilis/getErrorMessage";
 
 const THUNK_PREFIXES = {
   AUTH: "auth",

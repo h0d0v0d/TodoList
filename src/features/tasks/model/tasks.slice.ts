@@ -1,12 +1,12 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-import { createAppAsyncThunk } from "../../common/utilis/create-app-async-thunk";
-import { thunkTryCatch } from "../../common/utilis/thunk-try-catch";
-import { ChangeTaskArgs, DeleteTaskArgs, TaskType, tasksAPI } from "./tasks.api";
-import { todoListsThunks } from "../todoLists/todoLists.slice";
-import { authThunks } from "../auth/auth.slice";
-import { getErorMessage } from "../../common/utilis/getErrorMessage";
-import { RESULT_CODE } from "../../app/app.slice";
+import { createAppAsyncThunk } from "../../../common/utilis/create-app-async-thunk";
+import { thunkTryCatch } from "../../../common/utilis/thunk-try-catch";
+import { ChangeTaskArgs, DeleteTaskArgs, TaskType, tasksAPI } from "../tasks.api";
+import { todoListsThunks } from "../../todoLists/model/todoLists.slice";
+import { authThunks } from "../../auth/model/auth.slice";
+import { getErorMessage } from "../../../common/utilis/getErrorMessage";
+import { RESULT_CODE } from "../../../app/app.slice";
 import { toast } from "react-toastify";
 
 const THUNK_PREFIXES = {
