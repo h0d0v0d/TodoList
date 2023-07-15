@@ -1,4 +1,11 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
+
+export type RejectValue = {
+  error: string;
+  showGlobalError: boolean;
+  rejectData?: {};
+};
 
 export const RESULT_CODE = {
   OK: 0,
@@ -31,9 +38,6 @@ const slice = createSlice({
           return action.type.endsWith("/pending");
         },
         (state, action) => {
-          if (state.globalLoading === true) {
-            return;
-          }
           state.globalLoading = true;
         }
       )
@@ -42,9 +46,6 @@ const slice = createSlice({
           return action.type.endsWith("/fulfilled");
         },
         (state, action) => {
-          if (state.globalLoading === false) {
-            return;
-          }
           state.globalLoading = false;
         }
       )
@@ -55,6 +56,7 @@ const slice = createSlice({
         (state, action) => {
           state.globalLoading = false;
           if (action.payload.showGlobalError) {
+            toast.error(action.payload.error);
             state.error = action.payload.error;
           }
         }
