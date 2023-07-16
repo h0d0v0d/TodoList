@@ -1,8 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { toast } from "react-toastify";
 
 import { createAppAsyncThunk } from "../../../common/utilis";
-import { thunkTryCatch } from "../../../common/utilis";
 import { ChangeTaskArgs, DeleteTaskArgs, TaskType, tasksAPI } from "../tasks.api";
 import { todoListsThunks } from "../../todoLists";
 import { authThunks } from "../../auth";
@@ -20,23 +18,22 @@ const THUNK_PREFIXES = {
 type GetTasksPayload = { todoListId: string; tasks: TaskType[] };
 const getTasks = createAppAsyncThunk<GetTasksPayload, { todoListId: string }>(
   THUNK_PREFIXES.GET_TASKS,
-  async (args, thunkApi) => {
-    return thunkTryCatch(
-      thunkApi,
-      async () => {
-        const { todoListId } = args;
-        const res = await tasksAPI.getTasks(todoListId);
-        if (res.data.error === null) {
-          const tasks = res.data.items;
-          return { todoListId, tasks };
-        } else {
-          const error = getErorMessage(res.data.error);
-          toast.error(error);
-          return thunkApi.rejectWithValue({ error, showGlobalError: true });
-        }
-      },
-      { showGlobalError: true }
-    );
+  async (args, { rejectWithValue }) => {
+    const showGlobalError = true;
+    try {
+      const { todoListId } = args;
+      const res = await tasksAPI.getTasks(todoListId);
+      if (res.data.error === null) {
+        const tasks = res.data.items;
+        return { todoListId, tasks };
+      } else {
+        const error = getErorMessage(res.data.error);
+        return rejectWithValue({ error, showGlobalError });
+      }
+    } catch (e: any) {
+      const error = getErorMessage(e);
+      return rejectWithValue({ error, showGlobalError });
+    }
   }
 );
 
@@ -44,84 +41,69 @@ type CreateTasksArgs = { todoListId: string; title: string };
 type CreateTasksPayload = { todoListId: string; item: TaskType };
 const createTasks = createAppAsyncThunk<CreateTasksPayload, CreateTasksArgs>(
   THUNK_PREFIXES.CREATE_TASKS,
-  async (args, thunkApi) => {
-    return thunkTryCatch(
-      thunkApi,
-      async () => {
-        const { todoListId } = args;
-        const res = await tasksAPI.createTask(args);
-        if (res.data.resultCode === RESULT_CODE.OK) {
-          const item = res.data.data.item;
-          return { todoListId, item };
-        } else {
-          const error = getErorMessage(res.data);
-          toast.error(error);
-          return thunkApi.rejectWithValue({ error, showGlobalError: true });
-        }
-      },
-      { showGlobalError: true }
-    );
+  async (args, { rejectWithValue }) => {
+    const showGlobalError = true;
+    try {
+      const { todoListId } = args;
+      const res = await tasksAPI.createTask(args);
+      if (res.data.resultCode === RESULT_CODE.OK) {
+        const item = res.data.data.item;
+        return { todoListId, item };
+      } else {
+        const error = getErorMessage(res.data);
+        return rejectWithValue({ error, showGlobalError: true });
+      }
+    } catch (e: any) {
+      const error = getErorMessage(e);
+      return rejectWithValue({ error, showGlobalError });
+    }
   }
 );
 
 type ChangeTaskPayload = { todoListId: string; taskId: string; item: TaskType };
 const changeTask = createAppAsyncThunk<ChangeTaskPayload, ChangeTaskArgs>(
   THUNK_PREFIXES.CHANGE_TASK,
-  async (args, thunkApi) => {
-    return thunkTryCatch(
-      thunkApi,
-      async () => {
-        const { todoListId, taskId } = args;
-        thunkApi.dispatch(tasksActions.changeTaskIntityStatus({ todoListId, taskId, entityStatus: "loading" }));
-        const res = await tasksAPI.changeTask(args);
-        if (res.data.resultCode === RESULT_CODE.OK) {
-          const item = res.data.data.item;
-          return { todoListId, taskId, item };
-        } else {
-          const error = getErorMessage(res.data);
-          toast.error(error);
-          thunkApi.dispatch(tasksActions.changeTaskIntityStatus({ todoListId, taskId, entityStatus: "error" }));
-          return thunkApi.rejectWithValue({ error, showGlobalError: true });
-        }
-      },
-      {
-        showGlobalError: true,
-        rejectPayload: {
-          todoListId: args.todoListId,
-          taskId: args.taskId,
-        },
+  async (args, { rejectWithValue, dispatch }) => {
+    const showGlobalError = true;
+    try {
+      const { todoListId, taskId } = args;
+      dispatch(tasksActions.changeTaskIntityStatus({ todoListId, taskId, entityStatus: "loading" }));
+      const res = await tasksAPI.changeTask(args);
+      if (res.data.resultCode === RESULT_CODE.OK) {
+        const item = res.data.data.item;
+        return { todoListId, taskId, item };
+      } else {
+        const error = getErorMessage(res.data);
+        dispatch(tasksActions.changeTaskIntityStatus({ todoListId, taskId, entityStatus: "error" }));
+        return rejectWithValue({ error, showGlobalError: true });
       }
-    );
+    } catch (e: any) {
+      const error = getErorMessage(e);
+      return rejectWithValue({ error, showGlobalError });
+    }
   }
 );
 
 type DeleteTaskPaylaod = { todoListId: string; taskId: string };
 const deleteTask = createAppAsyncThunk<DeleteTaskPaylaod, DeleteTaskArgs>(
   THUNK_PREFIXES.DELETE_TASK,
-  async (args, thunkApi) => {
+  async (args, { rejectWithValue, dispatch }) => {
     const { todoListId, taskId } = args;
-    thunkApi.dispatch(tasksActions.changeTaskIntityStatus({ todoListId, taskId, entityStatus: "loading" }));
-    return thunkTryCatch(
-      thunkApi,
-      async () => {
-        const res = await tasksAPI.deleteTask(args);
-        if (res.data.resultCode === RESULT_CODE.OK) {
-          return args;
-        } else {
-          const error = getErorMessage(res.data);
-          toast.error(error);
-          thunkApi.dispatch(tasksActions.changeTaskIntityStatus({ todoListId, taskId, entityStatus: "error" }));
-          return thunkApi.rejectWithValue({ error, showGlobalError: true });
-        }
-      },
-      {
-        showGlobalError: true,
-        rejectPayload: {
-          todoListId: args.todoListId,
-          taskId: args.taskId,
-        },
+    dispatch(tasksActions.changeTaskIntityStatus({ todoListId, taskId, entityStatus: "loading" }));
+    const showGlobalError = true;
+    try {
+      const res = await tasksAPI.deleteTask(args);
+      if (res.data.resultCode === RESULT_CODE.OK) {
+        return args;
+      } else {
+        const error = getErorMessage(res.data);
+        dispatch(tasksActions.changeTaskIntityStatus({ todoListId, taskId, entityStatus: "error" }));
+        return rejectWithValue({ error, showGlobalError });
       }
-    );
+    } catch (e: any) {
+      const error = getErorMessage(e);
+      return rejectWithValue({ error, showGlobalError });
+    }
   }
 );
 
