@@ -4,7 +4,10 @@ import { toast } from "react-toastify";
 export type RejectValue = {
   error: string;
   showGlobalError: boolean;
-  rejectData?: {};
+  rejectData?: {
+    todoListId?: string;
+    taskId?: string;
+  };
 };
 
 export const RESULT_CODE = {

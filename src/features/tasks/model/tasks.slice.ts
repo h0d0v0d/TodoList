@@ -65,21 +65,19 @@ const changeTask = createAppAsyncThunk<ChangeTaskPayload, ChangeTaskArgs>(
   THUNK_PREFIXES.CHANGE_TASK,
   async (args, { rejectWithValue, dispatch }) => {
     const showGlobalError = true;
+    const { todoListId, taskId } = args;
     try {
-      const { todoListId, taskId } = args;
-      dispatch(tasksActions.changeTaskIntityStatus({ todoListId, taskId, entityStatus: "loading" }));
       const res = await tasksAPI.changeTask(args);
       if (res.data.resultCode === RESULT_CODE.OK) {
         const item = res.data.data.item;
         return { todoListId, taskId, item };
       } else {
         const error = getErorMessage(res.data);
-        dispatch(tasksActions.changeTaskIntityStatus({ todoListId, taskId, entityStatus: "error" }));
-        return rejectWithValue({ error, showGlobalError: true });
+        return rejectWithValue({ error, showGlobalError, rejectData: { taskId, todoListId } });
       }
     } catch (e: any) {
       const error = getErorMessage(e);
-      return rejectWithValue({ error, showGlobalError });
+      return rejectWithValue({ error, showGlobalError, rejectData: { taskId, todoListId } });
     }
   }
 );
@@ -98,11 +96,11 @@ const deleteTask = createAppAsyncThunk<DeleteTaskPaylaod, DeleteTaskArgs>(
       } else {
         const error = getErorMessage(res.data);
         dispatch(tasksActions.changeTaskIntityStatus({ todoListId, taskId, entityStatus: "error" }));
-        return rejectWithValue({ error, showGlobalError });
+        return rejectWithValue({ error, showGlobalError, rejectData: { taskId, todoListId } });
       }
     } catch (e: any) {
       const error = getErorMessage(e);
-      return rejectWithValue({ error, showGlobalError });
+      return rejectWithValue({ error, showGlobalError, rejectData: { taskId, todoListId } });
     }
   }
 );
@@ -134,19 +132,27 @@ const slice = createSlice({
           { ...action.payload.item, entityStatus: "idle" },
         ];
       })
+
+      .addCase(changeTask.pending, (state, action) => {
+        const { todoListId, taskId } = action.meta.arg;
+        const index = state.tasksData[todoListId].findIndex((task) => task.id === taskId);
+        state.tasksData[todoListId][index].entityStatus = "loading";
+      })
+      .addCase(changeTask.rejected, (state, action) => {
+        // @ts-ignore
+        const { todoListId, taskId } = action.payload?.rejectData;
+        const index = state.tasksData[todoListId].findIndex((task) => task.id === taskId);
+        state.tasksData[todoListId][index].entityStatus = "error";
+      })
       .addCase(changeTask.fulfilled, (state, action) => {
+        console.log("fulfilled");
         const index = state.tasksData[action.payload.todoListId].findIndex((task) => task.id === action.payload.taskId);
         state.tasksData[action.payload.todoListId].splice(index, 1, {
           ...action.payload.item,
           entityStatus: "successful",
         });
       })
-      .addCase(changeTask.rejected, (state, action) => {
-        // @ts-ignore
-        const { todoListId, taskId } = action.payload.rejectPayload;
-        const index = state.tasksData[todoListId].findIndex((task) => task.id === taskId);
-        state.tasksData[todoListId][index].entityStatus = "error";
-      })
+
       .addCase(deleteTask.fulfilled, (state, action) => {
         const index = state.tasksData[action.payload.todoListId].findIndex((task) => task.id === action.payload.taskId);
         state.tasksData[action.payload.todoListId].splice(index, 1);
