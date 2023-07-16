@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { toast } from "react-toastify";
 
 import {
   ChangeTodoListTitleArgs,
@@ -9,7 +8,6 @@ import {
   todoListAPI,
 } from "../todoLists.api";
 import { createAppAsyncThunk } from "../../../common/utilis";
-import { thunkTryCatch } from "../../../common/utilis";
 import { authThunks } from "../../auth";
 import { RESULT_CODE } from "../../../app/app.slice";
 import { getErorMessage } from "../../../common/utilis";
@@ -24,79 +22,77 @@ const THUNK_PREFIXES = {
 } as const;
 
 type GetTodoListsPayload = { todoLists: TodoListType[] };
-const getTodoLists = createAppAsyncThunk<GetTodoListsPayload>(THUNK_PREFIXES.GET_TODO_LISTS, async (args, thunkApi) => {
-  return thunkTryCatch(
-    thunkApi,
-    async () => {
+const getTodoLists = createAppAsyncThunk<GetTodoListsPayload>(
+  THUNK_PREFIXES.GET_TODO_LISTS,
+  async (args, { rejectWithValue }) => {
+    try {
       const res = await todoListAPI.getTodoLists();
-      const todoLists = res.data;
-      return { todoLists };
-    },
-    { showGlobalError: true }
-  );
-});
+      return { todoLists: res.data };
+    } catch (e: any) {
+      const error = getErorMessage(e);
+      return rejectWithValue({ error, showGlobalError: true });
+    }
+  }
+);
 
 type CreateTodoListPayload = { item: TodoListType };
 const createTodoList = createAppAsyncThunk<CreateTodoListPayload, CreateTodoListArgs>(
   THUNK_PREFIXES.CREATE_TODO_LIST,
-  async (args, thunkApi) => {
-    return thunkTryCatch(
-      thunkApi,
-      async () => {
-        const res = await todoListAPI.createTodoList(args);
-        if (res.data.resultCode === RESULT_CODE.OK) {
-          const item = res.data.data.item;
-          return { item };
-        } else {
-          const error = getErorMessage(res.data);
-          toast.error(error);
-          return thunkApi.rejectWithValue({ error, showGlobalError: true });
-        }
-      },
-      { showGlobalError: true }
-    );
+  async (args, { rejectWithValue }) => {
+    const showGlobalError = true;
+    try {
+      const res = await todoListAPI.createTodoList(args);
+      if (res.data.resultCode === RESULT_CODE.OK) {
+        const item = res.data.data.item;
+        return { item };
+      } else {
+        const error = getErorMessage(res.data);
+        return rejectWithValue({ error, showGlobalError });
+      }
+    } catch (e: any) {
+      const error = getErorMessage(e);
+      return rejectWithValue({ error, showGlobalError });
+    }
   }
 );
 
 type ChangeTodoListTitlePayload = ChangeTodoListTitleArgs;
 const changeTodoListTitle = createAppAsyncThunk<ChangeTodoListTitlePayload, ChangeTodoListTitleArgs>(
   THUNK_PREFIXES.UPDATE_TODO_LIST_TITLE,
-  async (args, thunkApi) => {
-    return thunkTryCatch(
-      thunkApi,
-      async () => {
-        const res = await todoListAPI.changeTodoListTitle(args);
-        if (res.data.resultCode === RESULT_CODE.OK) {
-          return args;
-        } else {
-          const error = getErorMessage(res.data);
-          toast.error(error);
-          return thunkApi.rejectWithValue({ error, showGlobalError: true });
-        }
-      },
-      { showGlobalError: true }
-    );
+  async (args, { rejectWithValue }) => {
+    const showGlobalError = true;
+    try {
+      const res = await todoListAPI.changeTodoListTitle(args);
+      if (res.data.resultCode === RESULT_CODE.OK) {
+        return args;
+      } else {
+        const error = getErorMessage(res.data);
+        return rejectWithValue({ error, showGlobalError: true });
+      }
+    } catch (e: any) {
+      const error = getErorMessage(e);
+      return rejectWithValue({ error, showGlobalError });
+    }
   }
 );
 
 type DeleteTodoListPayload = DeleteTodoListArgs;
 const deleteTodoList = createAppAsyncThunk<DeleteTodoListPayload, DeleteTodoListArgs>(
   THUNK_PREFIXES.DELETE_TODO_LIST,
-  async (args, thunkApi) => {
-    return thunkTryCatch(
-      thunkApi,
-      async () => {
-        const res = await todoListAPI.deleteTodoList(args);
-        if (res.data.resultCode === RESULT_CODE.OK) {
-          return args;
-        } else {
-          const error = getErorMessage(res.data);
-          toast.error(error);
-          return thunkApi.rejectWithValue({ error, showGlobalError: true });
-        }
-      },
-      { showGlobalError: true }
-    );
+  async (args, { rejectWithValue }) => {
+    const showGlobalError = true;
+    try {
+      const res = await todoListAPI.deleteTodoList(args);
+      if (res.data.resultCode === RESULT_CODE.OK) {
+        return args;
+      } else {
+        const error = getErorMessage(res.data);
+        return rejectWithValue({ error, showGlobalError: true });
+      }
+    } catch (e: any) {
+      const error = getErorMessage(e);
+      return rejectWithValue({ error, showGlobalError });
+    }
   }
 );
 

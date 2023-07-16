@@ -2,6 +2,7 @@ import { toast } from "react-toastify";
 import { BaseThunkAPI } from "@reduxjs/toolkit/dist/createAsyncThunk";
 import { AppDispatch, RootState } from "../../app/store";
 import { getErorMessage } from "./getErrorMessage";
+import { RejectValue } from "../../app/app.slice";
 
 type Options = {
   showGlobalError?: boolean | undefined;
@@ -22,7 +23,7 @@ type Options = {
  */
 
 export const thunkTryCatch = async <T>(
-  thunkAPI: BaseThunkAPI<RootState, any, AppDispatch, unknown>,
+  thunkAPI: BaseThunkAPI<RootState, any, AppDispatch, RejectValue>,
   promise: () => Promise<T>,
   options?: Options
 ): Promise<T | ReturnType<typeof thunkAPI.rejectWithValue>> => {
@@ -37,7 +38,7 @@ export const thunkTryCatch = async <T>(
       toast.error(errorText);
     }
     if (options?.rejectPayload) {
-      return rejectWithValue({ error: errorText, showGlobalError, rejectPayload: options.rejectPayload });
+      return rejectWithValue({ error: errorText, showGlobalError, rejectData: options.rejectPayload });
     }
     return rejectWithValue({ error: errorText, showGlobalError });
   }

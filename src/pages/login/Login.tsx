@@ -6,17 +6,16 @@ import FormGroup from "@mui/material/FormGroup/FormGroup";
 import TextField from "@mui/material/TextField";
 
 import { authThunks } from "../../features/auth";
-
 import { emailValidate, passwordValidate } from "../../common/utilis";
 import { getErorMessage } from "../../common/utilis";
-import { useActions } from "../../common/hooks";
+import { useAppDispatch } from "../../common/hooks";
 
 import { ResponseType } from "../../features/auth/auth.api";
 import "./login.css";
 
 export const Login = () => {
-  const { login } = useActions(authThunks);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const {
     register,
     handleSubmit,
@@ -31,7 +30,7 @@ export const Login = () => {
     mode: "onBlur",
   });
   const onSubmit = (data: { email: string; password: string }) => {
-    login(data)
+    dispatch(authThunks.login(data))
       .unwrap()
       .then(() => {
         navigate("/todo-lists");

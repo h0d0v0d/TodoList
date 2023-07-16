@@ -13,50 +13,50 @@ const THUNK_PREFIXES = {
 } as const;
 
 type MePayload = { isLoggedIn: boolean; user: User };
-const me = createAppAsyncThunk<MePayload>(THUNK_PREFIXES.ME, async (args, thunkApi) => {
+const me = createAppAsyncThunk<MePayload>(THUNK_PREFIXES.ME, async (_, { rejectWithValue }) => {
   const showGlobalError = true;
   try {
     const res = await authAPI.me();
     if (res.data.resultCode === RESULT_CODE.OK) {
-      return thunkApi.fulfillWithValue({ isLoggedIn: true, user: res.data.data });
+      return { isLoggedIn: true, user: res.data.data };
     } else {
       const error = getErorMessage(res.data);
-      return thunkApi.rejectWithValue({ error, showGlobalError });
+      return rejectWithValue({ error, showGlobalError });
     }
   } catch (e: any) {
     const error = getErorMessage(e);
-    return thunkApi.rejectWithValue({ error, showGlobalError });
+    return rejectWithValue({ error, showGlobalError });
   }
 });
 
 type LoginPayload = { isLoggedIn: boolean; userId: number };
-const login = createAppAsyncThunk<LoginPayload, LoginArgs>(THUNK_PREFIXES.LOGIN, async (args, thunkApi) => {
-  const showGlobalError = true;
-  try {
-    const res = await authAPI.login({
-      email: args.email,
-      password: args.password,
-    });
-    if (res.data.resultCode === RESULT_CODE.OK) {
-      const userId = res.data.data.userId;
-      return { isLoggedIn: true, userId };
-    } else {
-      if (res.data.fieldsErrors?.length === 0) {
-        const error = getErorMessage(res.data);
-        return thunkApi.rejectWithValue({ error, showGlobalError });
+const login = createAppAsyncThunk<LoginPayload, LoginArgs>(
+  THUNK_PREFIXES.LOGIN,
+  async ({ email, password }, { rejectWithValue }) => {
+    const showGlobalError = true;
+    try {
+      const res = await authAPI.login({ email, password });
+      if (res.data.resultCode === RESULT_CODE.OK) {
+        const userId = res.data.data.userId;
+        return { isLoggedIn: true, userId };
       } else {
-        const error = getErorMessage(res.data);
-        return thunkApi.rejectWithValue({ error, showGlobalError });
+        if (res.data.fieldsErrors?.length === 0) {
+          const error = getErorMessage(res.data);
+          return rejectWithValue({ error, showGlobalError });
+        } else {
+          const error = getErorMessage(res.data);
+          return rejectWithValue({ error, showGlobalError });
+        }
       }
+    } catch (e: any) {
+      const error = getErorMessage(e);
+      return rejectWithValue({ error, showGlobalError });
     }
-  } catch (e: any) {
-    const error = getErorMessage(e);
-    return thunkApi.rejectWithValue({ error, showGlobalError });
   }
-});
+);
 
 type LogoutPayload = { isLoggedIn: boolean };
-const logout = createAppAsyncThunk<LogoutPayload>(THUNK_PREFIXES.LOGOUT, async (args, thunkApi) => {
+const logout = createAppAsyncThunk<LogoutPayload>(THUNK_PREFIXES.LOGOUT, async (_, { rejectWithValue }) => {
   const showGlobalError = true;
   try {
     const res = await authAPI.logout();
@@ -64,11 +64,11 @@ const logout = createAppAsyncThunk<LogoutPayload>(THUNK_PREFIXES.LOGOUT, async (
       return { isLoggedIn: false };
     } else {
       const error = getErorMessage(res.data);
-      return thunkApi.rejectWithValue({ error, showGlobalError });
+      return rejectWithValue({ error, showGlobalError });
     }
   } catch (e: any) {
     const error = getErorMessage(e);
-    return thunkApi.rejectWithValue({ error, showGlobalError });
+    return rejectWithValue({ error, showGlobalError });
   }
 });
 
