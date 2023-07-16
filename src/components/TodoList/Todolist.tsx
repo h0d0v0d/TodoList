@@ -4,10 +4,10 @@ import Button from "@mui/material/Button";
 import { Delete } from "@mui/icons-material";
 import { Grid, Paper } from "@mui/material";
 
-import { useAppDispatch, useAppSelector } from "../../common/hooks";
-import { tasksThunks, selectFilteredTasksById } from "../../features/tasks";
-import { FilterType, todoListsThunks, selectTodoListById } from "../../features/todoLists";
-import { useActions } from "../../common/hooks";
+import { useAppDispatch, useAppSelector } from "common/hooks";
+import { tasksThunks, selectFilteredTasksById } from "features/tasks";
+import { FilterType, todoListsThunks, selectTodoListById } from "features/todoLists";
+import { useActions } from "common/hooks";
 
 import { AddItemForm } from "../AddItemForm/AddItemForm";
 import { EditableSpan } from "../EditableSpan/EditableSpan";

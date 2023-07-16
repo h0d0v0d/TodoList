@@ -1,10 +1,10 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 import { changeTaskEntityStatus, createAppAsyncThunk, getErorMessage } from "../../../common/utilis";
 import { ChangeTaskArgs, DeleteTaskArgs, TaskType, tasksAPI } from "../tasks.api";
 import { todoListsThunks } from "../../todoLists";
-import { authThunks } from "../../auth";
-import { RESULT_CODE } from "../../../app/app.slice";
+import { authThunks } from "features/auth";
+import { RESULT_CODE } from "app/app.slice";
 
 const THUNK_PREFIXES = {
   TASKS: "tasks",
@@ -120,7 +120,6 @@ const slice = createSlice({
           { ...action.payload.item, entityStatus: "idle" },
         ];
       })
-
       // change task
       .addCase(changeTask.pending, (state, { meta: { arg } }) => {
         changeTaskEntityStatus({ state, todoListId: arg.todoListId, taskId: arg.taskId, entityStatus: "loading" });

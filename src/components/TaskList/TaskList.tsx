@@ -2,7 +2,7 @@ import React from "react";
 
 import { Task } from "./Task/Task";
 
-import { AppTaskType } from "../../features/tasks";
+import { AppTaskType } from "features/tasks";
 
 type TaskListProps = {
   tasks: AppTaskType[];

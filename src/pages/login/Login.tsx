@@ -5,12 +5,11 @@ import { useNavigate } from "react-router-dom";
 import FormGroup from "@mui/material/FormGroup/FormGroup";
 import TextField from "@mui/material/TextField";
 
-import { authThunks } from "../../features/auth";
-import { emailValidate, passwordValidate } from "../../common/utilis";
-import { getErorMessage } from "../../common/utilis";
-import { useAppDispatch } from "../../common/hooks";
+import { authThunks } from "features/auth";
+import { emailValidate, passwordValidate, getErorMessage } from "common/utilis";
+import { useAppDispatch } from "common/hooks";
 
-import { ResponseType } from "../../features/auth/auth.api";
+import { ResponseType } from "features/auth";
 import "./login.css";
 
 export const Login = () => {

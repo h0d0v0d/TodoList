@@ -2,11 +2,11 @@ import React, { useCallback, useEffect } from "react";
 import Grid from "@mui/material/Grid";
 import { Button, Container, Toolbar } from "@mui/material";
 
-import { useActions, useAppDispatch, useAppSelector } from "../../common/hooks";
-import { todoListsThunks, selectTodoListsData } from "../../features/todoLists";
-import { authSelectors, authThunks } from "../../features/auth";
+import { useActions, useAppDispatch, useAppSelector } from "common/hooks";
+import { todoListsThunks, selectTodoListsData } from "features/todoLists";
+import { authSelectors, authThunks } from "features/auth";
 
-import { Todolist, AddItemForm } from "../../components";
+import { Todolist, AddItemForm } from "components";
 
 export const TodoLists = () => {
   const todolists = useAppSelector(selectTodoListsData);
