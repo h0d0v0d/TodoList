@@ -5,8 +5,8 @@ export type RejectValue = {
   error: string;
   showGlobalError: boolean;
   rejectData?: {
-    todoListId?: string;
-    taskId?: string;
+    todoListId: string;
+    taskId: string;
   };
 };
 

@@ -1,10 +1,9 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-import { createAppAsyncThunk } from "../../../common/utilis";
+import { changeTaskEntityStatus, createAppAsyncThunk, getErorMessage } from "../../../common/utilis";
 import { ChangeTaskArgs, DeleteTaskArgs, TaskType, tasksAPI } from "../tasks.api";
 import { todoListsThunks } from "../../todoLists";
 import { authThunks } from "../../auth";
-import { getErorMessage } from "../../../common/utilis";
 import { RESULT_CODE } from "../../../app/app.slice";
 
 const THUNK_PREFIXES = {
@@ -20,12 +19,11 @@ const getTasks = createAppAsyncThunk<GetTasksPayload, { todoListId: string }>(
   THUNK_PREFIXES.GET_TASKS,
   async (args, { rejectWithValue }) => {
     const showGlobalError = true;
+    const { todoListId } = args;
     try {
-      const { todoListId } = args;
       const res = await tasksAPI.getTasks(todoListId);
       if (res.data.error === null) {
-        const tasks = res.data.items;
-        return { todoListId, tasks };
+        return { todoListId, tasks: res.data.items };
       } else {
         const error = getErorMessage(res.data.error);
         return rejectWithValue({ error, showGlobalError });
@@ -43,12 +41,11 @@ const createTasks = createAppAsyncThunk<CreateTasksPayload, CreateTasksArgs>(
   THUNK_PREFIXES.CREATE_TASKS,
   async (args, { rejectWithValue }) => {
     const showGlobalError = true;
+    const { todoListId } = args;
     try {
-      const { todoListId } = args;
       const res = await tasksAPI.createTask(args);
       if (res.data.resultCode === RESULT_CODE.OK) {
-        const item = res.data.data.item;
-        return { todoListId, item };
+        return { todoListId, item: res.data.data.item };
       } else {
         const error = getErorMessage(res.data);
         return rejectWithValue({ error, showGlobalError: true });
@@ -63,14 +60,13 @@ const createTasks = createAppAsyncThunk<CreateTasksPayload, CreateTasksArgs>(
 type ChangeTaskPayload = { todoListId: string; taskId: string; item: TaskType };
 const changeTask = createAppAsyncThunk<ChangeTaskPayload, ChangeTaskArgs>(
   THUNK_PREFIXES.CHANGE_TASK,
-  async (args, { rejectWithValue, dispatch }) => {
+  async (args, { rejectWithValue }) => {
     const showGlobalError = true;
     const { todoListId, taskId } = args;
     try {
       const res = await tasksAPI.changeTask(args);
       if (res.data.resultCode === RESULT_CODE.OK) {
-        const item = res.data.data.item;
-        return { todoListId, taskId, item };
+        return { todoListId, taskId, item: res.data.data.item };
       } else {
         const error = getErorMessage(res.data);
         return rejectWithValue({ error, showGlobalError, rejectData: { taskId, todoListId } });
@@ -132,17 +128,16 @@ const slice = createSlice({
           { ...action.payload.item, entityStatus: "idle" },
         ];
       })
-
-      .addCase(changeTask.pending, (state, action) => {
-        const { todoListId, taskId } = action.meta.arg;
-        const index = state.tasksData[todoListId].findIndex((task) => task.id === taskId);
-        state.tasksData[todoListId][index].entityStatus = "loading";
+      // change task
+      .addCase(changeTask.pending, (state, { meta: { arg } }) => {
+        changeTaskEntityStatus({ state, todoListId: arg.todoListId, taskId: arg.taskId, entityStatus: "loading" });
       })
       .addCase(changeTask.rejected, (state, action) => {
-        // @ts-ignore
-        const { todoListId, taskId } = action.payload?.rejectData;
-        const index = state.tasksData[todoListId].findIndex((task) => task.id === taskId);
-        state.tasksData[todoListId][index].entityStatus = "error";
+        if (action.payload?.rejectData) {
+          const { todoListId, taskId } = action.payload?.rejectData;
+          const index = state.tasksData[todoListId].findIndex((task) => task.id === taskId);
+          state.tasksData[todoListId][index].entityStatus = "error";
+        }
       })
       .addCase(changeTask.fulfilled, (state, action) => {
         console.log("fulfilled");
